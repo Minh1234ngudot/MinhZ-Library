@@ -9,7 +9,7 @@ function MinhZ:SetWebhook(url)
     local lp = game.Players.LocalPlayer
     local fileName = "MinhZ_ExecuteCount.txt"
     local localCount = 1
-    local totalExecutes = "Updating..."
+    local totalExecutes = "Fetching..."
 
     pcall(function()
         if isfile and isfile(fileName) then
@@ -21,28 +21,27 @@ function MinhZ:SetWebhook(url)
     end)
 
     pcall(function()
-        local key = "MinhZHub_Global_Stats" 
+        local key = "MinhZ_Hub_Universal_Key_2024"
         local res = game:HttpGet("https://api.countapi.xyz/hit/" .. key .. "/visits")
-        if res then
+        if res and not string.find(res, "404") then
             local decoded = HttpService:JSONDecode(res)
             totalExecutes = tostring(decoded.value)
+        else
+            totalExecutes = "Stable (Cloud)" 
         end
     end)
 
     local data = {
-        ["content"] = nil,
         ["embeds"] = {{
-            ["title"] = "🚀 Script Execution Log",
-            ["description"] = "A user has executed your script!",
+            ["title"] = "📩 **New Execution Detected!**",
+            ["description"] = "A user has just launched **MinhZ Premium**.",
             ["color"] = 4508822,
             ["fields"] = {
-                {["name"] = "👤 Player Name", ["value"] = "```" .. lp.Name .. "```", ["inline"] = true},
-                {["name"] = "🆔 Player ID", ["value"] = "```" .. lp.UserId .. "```", ["inline"] = true},
-                {["name"] = "🎮 Game", ["value"] = "```" .. game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name .. "```", ["inline"] = false},
-                {["name"] = "📈 Local Executes", ["value"] = "```" .. localCount .. "```", ["inline"] = true},
-                {["name"] = "🌍 Total Global Executes", ["value"] = "```" .. totalExecutes .. "```", ["inline"] = true}
+                {["name"] = "👤 **User Information**", ["value"] = "Name: `" .. lp.Name .. "`\nID: `" .. lp.UserId .. "`", ["inline"] = false},
+                {["name"] = "🎮 **Game Detected**", ["value"] = "`" .. game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name .. "`", ["inline"] = false},
+                {["name"] = "📊 **Statistics**", ["value"] = "User Runs: `" .. localCount .. "`\nGlobal Runs: `" .. totalExecutes .. "`", ["inline"] = false}
             },
-            ["footer"] = {["text"] = "MinhZ Hub Premium • " .. os.date("%x %X")},
+            ["footer"] = {["text"] = "Logging System • " .. os.date("%b %d, %Y | %X")},
             ["thumbnail"] = {["url"] = "https://www.roblox.com/headshot-thumbnail/image?userId=" .. lp.UserId .. "&width=420&height=420&format=png"}
         }}
     }
