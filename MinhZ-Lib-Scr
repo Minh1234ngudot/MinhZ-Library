@@ -8,22 +8,33 @@ local HttpService = game:GetService("HttpService")
 function MinhZ:SetWebhook(url)
     local lp = game.Players.LocalPlayer
     local fileName = "MinhZ_ExecuteCount.txt"
-    local count = 1
+    local localCount = 1
+    local totalExecutes = "N/A"
 
     pcall(function()
         if isfile and isfile(fileName) then
-            count = tonumber(readfile(fileName)) + 1
+            localCount = tonumber(readfile(fileName)) + 1
         end
         if writefile then
-            writefile(fileName, tostring(count))
+            writefile(fileName, tostring(localCount))
         end
+    end)
+
+    pcall(function()
+        local key = "MinhZHub_Total_Unique"
+        local response = game:HttpGet("https://api.countapi.xyz/hit/" .. key .. "/v1")
+        local decoded = HttpService:JSONDecode(response)
+        totalExecutes = tostring(decoded.value)
     end)
 
     local data = {
         ["content"] = "",
         ["embeds"] = {{
-            ["title"] = "🚀 Script Executed!",
-            ["description"] = "**Player:** " .. lp.Name .. " (" .. lp.UserId .. ")\n**Execute Count:** " .. count .. "\n**Game:** " .. game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name,
+            ["title"] = "🚀 SCRIPT EXECUTED!",
+            ["description"] = "**Người chơi:** " .. lp.Name .. " (" .. lp.UserId .. ")\n" ..
+                              "**Lượt chạy cá nhân:** " .. localCount .. "\n" ..
+                              "**Tổng lượt chạy toàn cầu:** " .. totalExecutes .. "\n" ..
+                              "**Game:** " .. game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name,
             ["color"] = 4508822,
             ["footer"] = {["text"] = "MinhZ Hub Logger • " .. os.date("%X")}
         }}
