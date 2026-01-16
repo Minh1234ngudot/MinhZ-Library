@@ -9,10 +9,9 @@ function MinhZ:SetWebhook(url)
     local lp = game.Players.LocalPlayer
     local fileName = "MinhZ_ExecuteCount.txt"
     local localCount = 1
-    local totalExecutes = "1,000+" -- Giá trị mặc định nếu API nghẽn
+    local totalExecutes = "1,000+"
 
-    -- 1. Check Executor Name
-    local executor = "Unknown/Official Roblox"
+    local executor = "Unknown"
     if identifyexecutor then
         executor = identifyexecutor()
     elseif getexecutorname then
@@ -33,7 +32,6 @@ function MinhZ:SetWebhook(url)
         executor = "Arceus X"
     end
 
-    -- 2. Local Count Logic
     pcall(function()
         if isfile and isfile(fileName) then
             localCount = tonumber(readfile(fileName)) + 1
@@ -43,7 +41,6 @@ function MinhZ:SetWebhook(url)
         end
     end)
 
-    -- 3. Global Count Logic (Dùng API dự phòng siêu ổn định)
     pcall(function()
         local key = "MinhZHub_Premium_Key_99"
         local res = game:HttpGet("https://api.countapi.xyz/hit/"..key.."/visits")
@@ -53,7 +50,6 @@ function MinhZ:SetWebhook(url)
         end
     end)
 
-    -- 4. Discord Webhook Embed (English - UI Fields)
     local data = {
         ["embeds"] = {{
             ["title"] = "🚀 **Script Execution Log**",
@@ -82,7 +78,6 @@ function MinhZ:SetWebhook(url)
 end
 
 function MinhZ:CreateWindow(titleText)
-    -- Tự động dọn dẹp GUI cũ nếu trùng tên
     for _, gui in pairs(CoreGui:GetChildren()) do
         if gui:IsA("ScreenGui") and (gui.Name == "MinhZ_Library" or gui:FindFirstChild("Main")) then
             gui:Destroy()
