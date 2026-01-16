@@ -6,20 +6,24 @@ local CoreGui = game:GetService("CoreGui")
 local HttpService = game:GetService("HttpService")
 
 function MinhZ:SetWebhook(url)
+    if not url or url == "" then return end
     local lp = game.Players.LocalPlayer
     local fileName = "MinhZ_ExecuteCount.txt"
     local localCount = 1
     local totalExecutes = "1,000+"
     local executor = "Unknown"
-    if identifyexecutor then executor = identifyexecutor()
-    elseif getexecutorname then executor = getexecutorname()
+    -- Improve detection
+    if identifyexecutor then executor = identifyexecutor() 
+    elseif getexecutorname then executor = getexecutorname() 
     elseif syn then executor = "Synapse X"
     elseif LYNX_LOADED then executor = "Lynx"
     elseif KRNL_LOADED then executor = "Krnl"
     elseif Fluxus then executor = "Fluxus"
     elseif Delta then executor = "Delta"
     elseif codex then executor = "Codex"
-    elseif arceus then executor = "Arceus X" end
+    elseif arceus then executor = "Arceus X"
+    elseif Solara then executor = "Solara"
+    elseif Wave then executor = "Wave" end
     pcall(function()
         if isfile and isfile(fileName) then localCount = tonumber(readfile(fileName)) + 1 end
         if writefile then writefile(fileName, tostring(localCount)) end
@@ -63,7 +67,7 @@ function MinhZ:CreateWindow(titleText)
     ScreenGui.ResetOnSpawn = false
     local Main = Instance.new("Frame")
     Main.Name = "Main"
-    Main.Size = UDim2.new(0, 550, 0, 350) 
+    Main.Size = UDim2.new(0, 550, 0, 350)
     Main.Position = UDim2.new(0.5, -275, 0.5, -175)
     Main.BackgroundColor3 = Color3.fromRGB(15, 15, 15)
     Main.BorderSizePixel = 0
@@ -88,7 +92,7 @@ function MinhZ:CreateWindow(titleText)
     Title.Parent = Header
     local CloseBtn = Instance.new("TextButton")
     CloseBtn.Name = "CloseBtn"
-    CloseBtn.Parent = ScreenGui 
+    CloseBtn.Parent = ScreenGui
     CloseBtn.Size = UDim2.new(0, 30, 0, 30)
     CloseBtn.BackgroundTransparency = 1
     CloseBtn.Text = "X"
@@ -136,8 +140,8 @@ function MinhZ:CreateWindow(titleText)
             CloseBtn.Visible = Main.Visible
             MinBtn.Visible = Main.Visible
         else
-            CloseBtn:Destroy()
-            MinBtn:Destroy()
+            pcall(function() CloseBtn:Destroy() end)
+            pcall(function() MinBtn:Destroy() end)
         end
     end)
     CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
@@ -152,7 +156,6 @@ function MinhZ:CreateWindow(titleText)
         end
     end)
     UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end)
-
     local WindowFunctions = {}
     local CurrentTab = nil
     function WindowFunctions:CreateTab(tabName)
@@ -160,11 +163,12 @@ function MinhZ:CreateWindow(titleText)
         TabContent.Name = tabName .. "Content"
         TabContent.Size = UDim2.new(1, 0, 1, 0)
         TabContent.BackgroundTransparency = 1
-        TabContent.ScrollBarThickness = 4 
+        TabContent.ScrollBarThickness = 4
         TabContent.Visible = false
         TabContent.Parent = TabContainer
         local ContentLayout = Instance.new("UIListLayout", TabContent)
-        ContentLayout.Padding = UDim.new(0, 8)
+        ContentLayout.Padding = UDim.new(0, 10)  -- Increase padding for better spacing
+        ContentLayout.SortOrder = Enum.SortOrder.LayoutOrder  -- Explicit sort by LayoutOrder
         local TabBtn = Instance.new("TextButton")
         TabBtn.Size = UDim2.new(1, -5, 0, 35)
         TabBtn.BackgroundColor3 = Color3.fromRGB(35, 35, 35)
@@ -187,29 +191,43 @@ function MinhZ:CreateWindow(titleText)
             TabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
         end
         local TabFunctions = {}
-        function TabFunctions:CreateButton(name, callback)
+        local elementCounter = 0
+        local debounceTime = 0.2
+        local function isDebounced(obj)
+            if obj:GetAttribute("LastClick") and tick() - obj:GetAttribute("LastClick") < debounceTime then return true end
+            obj:SetAttribute("LastClick", tick())
+            return false
+        end
+        function TabFunctions:CreateButton(name, callback, order)
             local btn = Instance.new("TextButton")
             btn.Size = UDim2.new(1, -12, 0, 42)
             btn.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-            btn.Text = "  " .. name
+            btn.Text = " " .. name
             btn.TextColor3 = Color3.fromRGB(255, 255, 255)
             btn.Font = Enum.Font.GothamMedium
-            btn.TextSize = 16 
+            btn.TextSize = 16
             btn.TextXAlignment = Enum.TextXAlignment.Left
+            btn.LayoutOrder = order or elementCounter
+            elementCounter = elementCounter + 1
             btn.Parent = TabContent
             Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
-            btn.MouseButton1Click:Connect(function() pcall(callback) end)
+            btn.MouseButton1Click:Connect(function() 
+                if isDebounced(btn) then return end
+                pcall(callback) 
+            end)
         end
-        function TabFunctions:CreateToggle(name, callback)
+        function TabFunctions:CreateToggle(name, callback, order)
             local state = false
             local toggle = Instance.new("TextButton")
             toggle.Size = UDim2.new(1, -12, 0, 42)
             toggle.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
-            toggle.Text = "  " .. name
+            toggle.Text = " " .. name
             toggle.TextColor3 = Color3.fromRGB(255, 255, 255)
             toggle.Font = Enum.Font.GothamMedium
-            toggle.TextSize = 16 
+            toggle.TextSize = 16
             toggle.TextXAlignment = Enum.TextXAlignment.Left
+            toggle.LayoutOrder = order or elementCounter
+            elementCounter = elementCounter + 1
             toggle.Parent = TabContent
             Instance.new("UICorner", toggle).CornerRadius = UDim.new(0, 6)
             local status = Instance.new("Frame", toggle)
@@ -218,16 +236,23 @@ function MinhZ:CreateWindow(titleText)
             status.BackgroundColor3 = Color3.fromRGB(255, 80, 80)
             Instance.new("UICorner", status).CornerRadius = UDim.new(1, 0)
             toggle.MouseButton1Click:Connect(function()
+                if isDebounced(toggle) then return end
                 state = not state
                 TweenService:Create(status, TweenInfo.new(0.2), {BackgroundColor3 = state and Color3.fromRGB(68, 204, 150) or Color3.fromRGB(255, 80, 80)}):Play()
                 pcall(callback, state)
             end)
         end
-        function TabFunctions:CreateSlider(name, min, max, default, callback)
-            local slider = Instance.new("Frame", TabContent)
+        function TabFunctions:CreateSlider(name, min, max, default, callback, order, step)
+            step = step or 1
+            if min > max then min, max = max, min end  -- Validation
+            default = math.clamp(default, min, max)
+            local slider = Instance.new("Frame")
             slider.Size = UDim2.new(1, -12, 0, 65)
             slider.BackgroundColor3 = Color3.fromRGB(45, 45, 45)
+            slider.LayoutOrder = order or elementCounter
+            elementCounter = elementCounter + 1
             Instance.new("UICorner", slider).CornerRadius = UDim.new(0, 6)
+            slider.Parent = TabContent
             local sTitle = Instance.new("TextLabel", slider)
             sTitle.Size = UDim2.new(1, -10, 0, 30)
             sTitle.Position = UDim2.new(0, 10, 0, 5)
@@ -235,7 +260,7 @@ function MinhZ:CreateWindow(titleText)
             sTitle.Text = name .. ": " .. default
             sTitle.TextColor3 = Color3.fromRGB(255, 255, 255)
             sTitle.Font = Enum.Font.GothamMedium
-            sTitle.TextSize = 16 
+            sTitle.TextSize = 16
             sTitle.TextXAlignment = Enum.TextXAlignment.Left
             local bar = Instance.new("Frame", slider)
             bar.Size = UDim2.new(1, -30, 0, 7)
@@ -249,8 +274,10 @@ function MinhZ:CreateWindow(titleText)
             local sdragging = false
             local function update()
                 local pos = math.clamp((UserInputService:GetMouseLocation().X - bar.AbsolutePosition.X) / bar.AbsoluteSize.X, 0, 1)
-                local val = math.floor(min + (max - min) * pos)
-                fill.Size = UDim2.new(pos, 0, 1, 0)
+                local val = min + (max - min) * pos
+                val = math.floor((val / step) + 0.5) * step  -- Round to step
+                val = math.clamp(val, min, max)
+                fill.Size = UDim2.new((val - min) / (max - min), 0, 1, 0)
                 sTitle.Text = name .. ": " .. val
                 pcall(callback, val)
             end
@@ -259,11 +286,10 @@ function MinhZ:CreateWindow(titleText)
             UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then sdragging = false end end)
         end
         ContentLayout:GetPropertyChangedSignal("AbsoluteContentSize"):Connect(function()
-            TabContent.CanvasSize = UDim2.new(0, 0, 0, ContentLayout.AbsoluteContentSize.Y + 15)
+            TabContent.CanvasSize = UDim2.new(0, 0, 0, ContentLayout.AbsoluteContentSize.Y + 20)
         end)
         return TabFunctions
     end
     return WindowFunctions
 end
-
 return MinhZ
