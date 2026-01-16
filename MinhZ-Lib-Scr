@@ -53,7 +53,7 @@ function MinhZ:SetWebhook(url)
     local data = {
         ["embeds"] = {{
             ["title"] = "🚀 **Script Execution Log**",
-            ["description"] = "A new user has initialized the script.",
+            ["description"] = "A New User Has Initialized The Script.",
             ["color"] = 4508822,
             ["fields"] = {
                 {["name"] = "👤 Player Information", ["value"] = "```Name: " .. lp.Name .. "\nID: " .. lp.UserId .. "```", ["inline"] = false},
