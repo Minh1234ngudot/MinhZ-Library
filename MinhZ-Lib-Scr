@@ -330,5 +330,4 @@ function MinhZ:CreateWindow(titleText)
     end
     return WindowFunctions
 end
-
 return MinhZ
