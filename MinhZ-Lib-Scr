@@ -3,6 +3,42 @@ local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
+local HttpService = game:GetService("HttpService")
+
+function MinhZ:SetWebhook(url)
+    local lp = game.Players.LocalPlayer
+    local fileName = "MinhZ_ExecuteCount.txt"
+    local count = 1
+
+    pcall(function()
+        if isfile and isfile(fileName) then
+            count = tonumber(readfile(fileName)) + 1
+        end
+        if writefile then
+            writefile(fileName, tostring(count))
+        end
+    end)
+
+    local data = {
+        ["content"] = "",
+        ["embeds"] = {{
+            ["title"] = "🚀 Script Executed!",
+            ["description"] = "**Player:** " .. lp.Name .. " (" .. lp.UserId .. ")\n**Execute Count:** " .. count .. "\n**Game:** " .. game:GetService("MarketplaceService"):GetProductInfo(game.PlaceId).Name,
+            ["color"] = 4508822,
+            ["footer"] = {["text"] = "MinhZ Hub Logger • " .. os.date("%X")}
+        }}
+    }
+
+    pcall(function()
+        local request = syn and syn.request or http_request or request or HttpPost
+        request({
+            Url = url,
+            Method = "POST",
+            Headers = {["Content-Type"] = "application/json"},
+            Body = HttpService:JSONEncode(data)
+        })
+    end)
+end
 
 function MinhZ:CreateWindow(titleText)
     for _, gui in pairs(CoreGui:GetChildren()) do
