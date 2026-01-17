@@ -225,17 +225,9 @@ MIT License - Feel free to use in your projects!
 
 ## 💬 Support
 
-- **Discord**: [Your Discord Server]
+- **Discord**: [discord.gg/4tkJqrZv4m]
 - **GitHub Issues**: Report bugs here
-- **Roblox**: [Your Profile]
-
-## 📸 Screenshots
-
-### Main Window
-![Main Window](https://via.placeholder.com/550x350/14121E/C850B4?text=MinhZ+Library)
-
-### Components Demo
-![Components](https://via.placeholder.com/550x350/14121E/C850B4?text=All+Components)
+- **Roblox**: [[Your Profile](https://www.roblox.com/users/9773437936/profile)]
 
 ---
 
