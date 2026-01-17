@@ -31,7 +31,7 @@ A modern, clean and feature-rich UI Library for Roblox scripts with beautiful an
 
 ### Method 1: Loadstring (Recommended)
 ```lua
-local MinhZ = loadstring(game:HttpGet("YOUR_RAW_GITHUB_URL_HERE"))()
+local MinhZ = loadstring(game:HttpGet("https://raw.githubusercontent.com/Minh1234ngudot/MinhZ-Library/refs/heads/main/MinhZ-Lib-Scr"))()
 ```
 
 ### Method 2: Local Module
@@ -46,7 +46,7 @@ local MinhZ = require(path.to.MinhZLibrary)
 
 ### Basic Setup
 ```lua
-local MinhZ = loadstring(game:HttpGet("YOUR_URL"))()
+local MinhZ = loadstring(game:HttpGet("https://raw.githubusercontent.com/Minh1234ngudot/MinhZ-Library/refs/heads/main/MinhZ-Lib-Scr"))()
 local Window = MinhZ:CreateWindow("My Script")
 
 local Tab1 = Window:CreateTab("Main")
