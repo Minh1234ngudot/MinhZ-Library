@@ -225,9 +225,9 @@ MIT License - Feel free to use in your projects!
 
 ## 💬 Support
 
-- **Discord**: [[Join Discord For Support](discord.gg/4tkJqrZv4m)]
+- **Discord**: [Join Discord For Support](discord.gg/4tkJqrZv4m)
 - **GitHub Issues**: Report bugs here
-- **Roblox**: [[My Profile Roblox](https://www.roblox.com/users/9773437936/profile)]
+- **Roblox**: [My Profile Roblox](https://www.roblox.com/users/9773437936/profile)
 
 ---
 
