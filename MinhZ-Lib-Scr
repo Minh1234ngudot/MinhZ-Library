@@ -6,7 +6,6 @@ local Players = game:GetService("Players")
 local LocalizationService = game:GetService("LocalizationService")
 local RunService = game:GetService("RunService")
 
--- Map from country code to nationality
 local CountryToNationality = {
     ["AD"] = "Andorran",
     ["AE"] = "Emirati",
@@ -272,7 +271,6 @@ local CountryToNationality = {
     ["ZW"] = "Zimbabwean"
 }
 
--- 1. THÊM NHIỀU THEME HƠN (Đã thêm theme mới: Light và Cyber)
 local Themes = {
     Purple = {
         Primary = Color3.fromRGB(200, 80, 180),
@@ -322,7 +320,6 @@ local Themes = {
         Sidebar = Color3.fromRGB(15, 15, 30),
         Component = Color3.fromRGB(25, 25, 45)
     },
-    -- Theme mới
     Light = {
         Primary = Color3.fromRGB(50, 50, 50),
         Background = Color3.fromRGB(240, 240, 245),
@@ -339,14 +336,12 @@ local Themes = {
 
 local CurrentTheme = Themes.Purple
 
--- Hàm tính luminance để chọn text color contrast
 local function GetContrastText(bgColor)
     local r, g, b = bgColor.r, bgColor.g, bgColor.b
     local luminance = (r * 0.299) + (g * 0.587) + (b * 0.114)
     return luminance > 0.5 and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
 end
 
--- XỬ LÝ NOTIFICATION FIX (Dùng UIListLayout để không bị chồng)
 local NotifContainer = nil
 local function InitNotifGui()
     if NotifContainer then return NotifContainer end
@@ -422,7 +417,6 @@ function MinhZ:Notify(options)
     DescLabel.TextXAlignment = Enum.TextXAlignment.Left
     DescLabel.TextWrapped = true
     
-    -- Animation Effect
     Notif.BackgroundTransparency = 1
     DescLabel.TextTransparency = 1
     TitleLabel.TextTransparency = 1
@@ -510,7 +504,6 @@ function MinhZ:CreateWindow(titleText)
     TabContainer.Position = UDim2.new(0, 165, 0, 45)
     TabContainer.BackgroundTransparency = 1
 
-    -- Dragging & Minimize Logic
     local minimized = false
     MinBtn.MouseButton1Click:Connect(function()
         minimized = not minimized
@@ -538,7 +531,6 @@ function MinhZ:CreateWindow(titleText)
     local WindowFuncs = {}
     local FirstTab = true
 
-    -- Hàm refresh theme full (recurse update all elements)
     local function RefreshTheme(element, oldTheme)
         if element:IsA("Frame") then
             if element.BackgroundColor3 == oldTheme.Background then
@@ -561,7 +553,6 @@ function MinhZ:CreateWindow(titleText)
             if element.TextColor3 == oldTheme.Primary then
                 element.TextColor3 = CurrentTheme.Primary
             end
-            -- Special for active tabs/buttons
             if element.BackgroundColor3 == CurrentTheme.Primary then
                 element.TextColor3 = GetContrastText(CurrentTheme.Primary)
             end
@@ -571,9 +562,7 @@ function MinhZ:CreateWindow(titleText)
                 element.BackgroundColor3 = CurrentTheme.Component
             end
         elseif element:IsA("ImageLabel") then
-            -- Update if needed, e.g., for fills in sliders
         end
-        -- Recurse children
         for _, child in pairs(element:GetChildren()) do
             RefreshTheme(child, oldTheme)
         end
@@ -583,13 +572,11 @@ function MinhZ:CreateWindow(titleText)
         if Themes[themeName] then
             local oldTheme = CurrentTheme
             CurrentTheme = Themes[themeName]
-            -- Update root elements
             Main.BackgroundColor3 = CurrentTheme.Background
             Sidebar.BackgroundColor3 = CurrentTheme.Sidebar
             Title.TextColor3 = CurrentTheme.Primary
             CloseBtn.BackgroundColor3 = CurrentTheme.Component
             MinBtn.BackgroundColor3 = CurrentTheme.Component
-            -- Full refresh
             RefreshTheme(Main, oldTheme)
         end
     end
@@ -635,14 +622,13 @@ function MinhZ:CreateWindow(titleText)
         local TabFuncs = {}
         local order = 0
 
-        -- 2. INFO TAB NÂNG CẤP (BUTTONS + TIME SECONDS + Quốc tịch + Executor + Thời gian tạo tài khoản)
         function TabFuncs:CreateInfo()
             order = order + 1
             local lp = Players.LocalPlayer
             
             local InfoFrame = Instance.new("Frame", TabContent)
             InfoFrame.LayoutOrder = order
-            InfoFrame.Size = UDim2.new(1, -12, 0, 200) -- Giảm chiều cao để fit content, tránh scroll thừa
+            InfoFrame.Size = UDim2.new(1, -12, 0, 200)
             InfoFrame.BackgroundColor3 = CurrentTheme.Component
             Instance.new("UICorner", InfoFrame).CornerRadius = UDim.new(0, 8)
             
@@ -673,7 +659,6 @@ function MinhZ:CreateWindow(titleText)
             DisplayName.TextSize = 13
             DisplayName.TextXAlignment = Enum.TextXAlignment.Left
             
-            -- Thêm Quốc tịch (Nationality)
             local NationalityLabel = Instance.new("TextLabel", InfoFrame)
             NationalityLabel.Size = UDim2.new(1, -100, 0, 20)
             NationalityLabel.Position = UDim2.new(0, 95, 0, 60)
@@ -696,7 +681,6 @@ function MinhZ:CreateWindow(titleText)
                 end
             end)
             
-            -- Thêm thời gian tạo tài khoản
             local CreationLabel = Instance.new("TextLabel", InfoFrame)
             CreationLabel.Size = UDim2.new(1, -30, 0, 20)
             CreationLabel.Position = UDim2.new(0, 15, 0, 135)
@@ -706,12 +690,11 @@ function MinhZ:CreateWindow(titleText)
             CreationLabel.TextSize = 12
             CreationLabel.TextXAlignment = Enum.TextXAlignment.Left
             
-            local accountAge = lp.AccountAge  -- days since creation
-            local creationTime = os.time() - (accountAge * 86400)  -- approximate creation timestamp
+            local accountAge = lp.AccountAge
+            local creationTime = os.time() - (accountAge * 86400)
             local creationDate = os.date("%Y-%m-%d %H:%M:%S", creationTime)
             CreationLabel.Text = "Account Created: " .. creationDate
             
-            -- Executor
             local ExecutorLabel = Instance.new("TextLabel", InfoFrame)
             ExecutorLabel.Size = UDim2.new(1, -30, 0, 20)
             ExecutorLabel.Position = UDim2.new(0, 15, 0, 115)
@@ -728,7 +711,6 @@ function MinhZ:CreateWindow(titleText)
                 executorName = "Synapse"
             elseif fluxus then
                 executorName = "Fluxus"
-            -- Thêm check cho executor khác nếu cần
             end
             ExecutorLabel.Text = "Executor: " .. executorName
 
@@ -742,7 +724,6 @@ function MinhZ:CreateWindow(titleText)
             TimeLabel.TextXAlignment = Enum.TextXAlignment.Left
             TimeLabel.Text = "⏳ Server Time: Loading..."
 
-            -- Realtime Seconds Logic (DistributedGameTime là thời gian từ khi server start, reset khi server mới)
             task.spawn(function()
                 while InfoFrame.Parent do
                     local t = workspace.DistributedGameTime
@@ -754,10 +735,9 @@ function MinhZ:CreateWindow(titleText)
                 end
             end)
             
-            -- Button Container cho Info
             local InfoBtnContainer = Instance.new("Frame", InfoFrame)
             InfoBtnContainer.Size = UDim2.new(1, -30, 0, 35)
-            InfoBtnContainer.Position = UDim2.new(0, 15, 0, 155) -- Đẩy lên để loại gap thừa
+            InfoBtnContainer.Position = UDim2.new(0, 15, 0, 155)
             InfoBtnContainer.BackgroundTransparency = 1
             
             local IBLayout = Instance.new("UIListLayout", InfoBtnContainer)
@@ -765,11 +745,10 @@ function MinhZ:CreateWindow(titleText)
             IBLayout.Padding = UDim.new(0, 10)
             
             local InfoFuncs = {}
-            
-            -- Hàm thêm nút vào Info Tab
+
             function InfoFuncs:AddButton(text, callback)
                 local SBtn = Instance.new("TextButton", InfoBtnContainer)
-                SBtn.Size = UDim2.new(0, 100, 1, 0) -- Auto scale width if needed
+                SBtn.Size = UDim2.new(0, 100, 1, 0)
                 SBtn.BackgroundColor3 = CurrentTheme.Background
                 SBtn.Text = text
                 SBtn.TextColor3 = CurrentTheme.Primary
@@ -858,7 +837,7 @@ function MinhZ:CreateWindow(titleText)
             DropFrame.Size = UDim2.new(1, -12, 0, 42)
             DropFrame.BackgroundColor3 = CurrentTheme.Component
             DropFrame.ClipsDescendants = true
-            DropFrame.ZIndex = 2 -- Fix ZIndex overlap
+            DropFrame.ZIndex = 2
             Instance.new("UICorner", DropFrame).CornerRadius = UDim.new(0, 6)
 
             local DropBtn = Instance.new("TextButton", DropFrame)
