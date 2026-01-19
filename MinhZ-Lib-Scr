@@ -2,6 +2,449 @@ local MinhZ = {}
 local TweenService = game:GetService("TweenService")
 local UserInputService = game:GetService("UserInputService")
 local CoreGui = game:GetService("CoreGui")
+local Players = game:GetService("Players")
+local LocalizationService = game:GetService("LocalizationService")
+local RunService = game:GetService("RunService")
+
+-- Map from country code to nationality
+local CountryToNationality = {
+    ["AD"] = "Andorran",
+    ["AE"] = "Emirati",
+    ["AF"] = "Afghan",
+    ["AG"] = "Antiguan, Barbudan",
+    ["AI"] = "Anguillian",
+    ["AL"] = "Albanian",
+    ["AM"] = "Armenian",
+    ["AN"] = "Dutch",
+    ["AO"] = "Angolan",
+    ["AQ"] = "???",
+    ["AR"] = "Argentinean",
+    ["AS"] = "American Samoan",
+    ["AT"] = "Austrian",
+    ["AU"] = "Australian",
+    ["AW"] = "Aruban",
+    ["AX"] = "Swedish",
+    ["AZ"] = "Azerbaijani",
+    ["BA"] = "Bosnian, Herzegovinian",
+    ["BB"] = "Barbadian",
+    ["BD"] = "Bangladeshi",
+    ["BE"] = "Belgian",
+    ["BF"] = "Burkinabe",
+    ["BG"] = "Bulgarian",
+    ["BH"] = "Bahraini",
+    ["BI"] = "Burundian",
+    ["BJ"] = "Beninese",
+    ["BL"] = "Saint Barthélemy Islander",
+    ["BM"] = "Bermudian",
+    ["BN"] = "Bruneian",
+    ["BO"] = "Bolivian",
+    ["BQ"] = "Dutch",
+    ["BR"] = "Brazilian",
+    ["BS"] = "Bahamian",
+    ["BT"] = "Bhutanese",
+    ["BV"] = "???",
+    ["BW"] = "Motswana",
+    ["BY"] = "Belarusian",
+    ["BZ"] = "Belizean",
+    ["CA"] = "Canadian",
+    ["CC"] = "Cocos Islander",
+    ["CD"] = "Congolese",
+    ["CF"] = "Central African",
+    ["CG"] = "Congolese",
+    ["CH"] = "Swiss",
+    ["CI"] = "Ivorian",
+    ["CK"] = "Cook Islander",
+    ["CL"] = "Chilean",
+    ["CM"] = "Cameroonian",
+    ["CN"] = "Chinese",
+    ["CO"] = "Colombian",
+    ["CR"] = "Costa Rican",
+    ["CS"] = "Montenegrins, Serbs",
+    ["CT"] = "???",
+    ["CU"] = "Cuban",
+    ["CV"] = "Cape Verdian",
+    ["CW"] = "Curaçaoan",
+    ["CX"] = "Christmas Island",
+    ["CY"] = "Cypriot",
+    ["CZ"] = "Czech",
+    ["DE"] = "German",
+    ["DJ"] = "Djibouti",
+    ["DK"] = "Danish",
+    ["DM"] = "Dominican",
+    ["DO"] = "Dominican",
+    ["DZ"] = "Algerian",
+    ["EC"] = "Ecuadorean",
+    ["EE"] = "Estonian",
+    ["EG"] = "Egyptian",
+    ["EH"] = "Sahrawi",
+    ["ER"] = "Eritrean",
+    ["ES"] = "Spanish",
+    ["ET"] = "Ethiopian",
+    ["FI"] = "Finnish",
+    ["FJ"] = "Fijian",
+    ["FK"] = "Falkland Islander",
+    ["FM"] = "Micronesian",
+    ["FO"] = "Faroese",
+    ["FQ"] = "???",
+    ["FR"] = "French",
+    ["FX"] = "???",
+    ["GA"] = "Gabonese",
+    ["GB"] = "British",
+    ["GD"] = "Grenadian",
+    ["GE"] = "Georgian",
+    ["GF"] = "???",
+    ["GG"] = "Channel Islander",
+    ["GH"] = "Ghanaian",
+    ["GI"] = "Gibraltar",
+    ["GL"] = "Greenlandic",
+    ["GM"] = "Gambian",
+    ["GN"] = "Guinean",
+    ["GP"] = "Guadeloupian",
+    ["GQ"] = "Equatorial Guinean",
+    ["GR"] = "Greek",
+    ["GS"] = "South Georgia and the South Sandwich Islander",
+    ["GT"] = "Guatemalan",
+    ["GU"] = "Guamanian",
+    ["GW"] = "Guinea-Bissauan",
+    ["GY"] = "Guyanese",
+    ["HK"] = "Chinese",
+    ["HM"] = "Heard and McDonald Islander",
+    ["HN"] = "Honduran",
+    ["HR"] = "Croatian",
+    ["HT"] = "Haitian",
+    ["HU"] = "Hungarian",
+    ["ID"] = "Indonesian",
+    ["IE"] = "Irish",
+    ["IL"] = "Israeli",
+    ["IM"] = "Manx",
+    ["IN"] = "Indian",
+    ["IO"] = "Indian",
+    ["IQ"] = "Iraqi",
+    ["IR"] = "Iranian",
+    ["IS"] = "Icelander",
+    ["IT"] = "Italian",
+    ["JE"] = "Channel Islander",
+    ["JM"] = "Jamaican",
+    ["JO"] = "Jordanian",
+    ["JP"] = "Japanese",
+    ["JT"] = "???",
+    ["KE"] = "Kenyan",
+    ["KG"] = "Kirghiz",
+    ["KH"] = "Cambodian",
+    ["KI"] = "I-Kiribati",
+    ["KM"] = "Comoran",
+    ["KN"] = "Kittian and Nevisian",
+    ["KP"] = "North Korean",
+    ["KR"] = "South Korean",
+    ["KW"] = "Kuwaiti",
+    ["KY"] = "Caymanian",
+    ["KZ"] = "Kazakhstani",
+    ["LA"] = "Laotian",
+    ["LB"] = "Lebanese",
+    ["LC"] = "Saint Lucian",
+    ["LI"] = "Liechtensteiner",
+    ["LK"] = "Sri Lankan",
+    ["LR"] = "Liberian",
+    ["LS"] = "Mosotho",
+    ["LT"] = "Lithuanian",
+    ["LU"] = "Luxembourger",
+    ["LV"] = "Latvian",
+    ["LY"] = "Libyan",
+    ["MA"] = "Moroccan",
+    ["MC"] = "Monegasque",
+    ["MD"] = "Moldovan",
+    ["ME"] = "Montenegrin",
+    ["MF"] = "Saint Martin Islander",
+    ["MG"] = "Malagasy",
+    ["MH"] = "Marshallese",
+    ["MI"] = "???",
+    ["MK"] = "Macedonian",
+    ["ML"] = "Malian",
+    ["MM"] = "Myanmar",
+    ["MN"] = "Mongolian",
+    ["MO"] = "Chinese",
+    ["MP"] = "American",
+    ["MQ"] = "French",
+    ["MR"] = "Mauritanian",
+    ["MS"] = "Montserratian",
+    ["MT"] = "Maltese",
+    ["MU"] = "Mauritian",
+    ["MV"] = "Maldivan",
+    ["MW"] = "Malawian",
+    ["MX"] = "Mexican",
+    ["MY"] = "Malaysian",
+    ["MZ"] = "Mozambican",
+    ["NA"] = "Namibian",
+    ["NC"] = "New Caledonian",
+    ["NE"] = "Nigerian",
+    ["NF"] = "Norfolk Islander",
+    ["NG"] = "Nigerian",
+    ["NI"] = "Nicaraguan",
+    ["NL"] = "Dutch",
+    ["NO"] = "Norwegian",
+    ["NP"] = "Nepalese",
+    ["NQ"] = "???",
+    ["NR"] = "Nauruan",
+    ["NT"] = "???",
+    ["NU"] = "Niuean",
+    ["NZ"] = "New Zealander",
+    ["OM"] = "Omani",
+    ["PA"] = "Panamanian",
+    ["PC"] = "???",
+    ["PE"] = "Peruvian",
+    ["PF"] = "French Polynesian",
+    ["PG"] = "Papua New Guinean",
+    ["PH"] = "Filipino",
+    ["PK"] = "Pakistani",
+    ["PL"] = "Polish",
+    ["PM"] = "French",
+    ["PN"] = "Pitcairn Islander",
+    ["PR"] = "Puerto Rican",
+    ["PS"] = "Palestinian",
+    ["PT"] = "Portuguese",
+    ["PU"] = "???",
+    ["PW"] = "Palauan",
+    ["PY"] = "Paraguayan",
+    ["PZ"] = "???",
+    ["QA"] = "Qatari",
+    ["RE"] = "French",
+    ["RO"] = "Romanian",
+    ["RS"] = "Serbian",
+    ["RU"] = "Russian",
+    ["RW"] = "Rwandan",
+    ["SA"] = "Saudi Arabian",
+    ["SB"] = "Solomon Islander",
+    ["SC"] = "Seychellois",
+    ["SD"] = "Sudanese",
+    ["SE"] = "Swedish",
+    ["SG"] = "Singaporean",
+    ["SH"] = "Saint Helenian",
+    ["SI"] = "Slovene",
+    ["SJ"] = "Norwegian",
+    ["SK"] = "Slovak",
+    ["SL"] = "Sierra Leonean",
+    ["SM"] = "Sammarinese",
+    ["SN"] = "Senegalese",
+    ["SO"] = "Somali",
+    ["SR"] = "Surinamer",
+    ["ST"] = "Sao Tomean",
+    ["SU"] = "???",
+    ["SV"] = "Salvadoran",
+    ["SY"] = "Syrian",
+    ["SZ"] = "Swazi",
+    ["TC"] = "Turks and Caicos Islander",
+    ["TD"] = "Chadian",
+    ["TF"] = "French",
+    ["TG"] = "Togolese",
+    ["TH"] = "Thai",
+    ["TJ"] = "Tadzhik",
+    ["TK"] = "Tokelauan",
+    ["TL"] = "East Timorese",
+    ["TM"] = "Turkmen",
+    ["TN"] = "Tunisian",
+    ["TO"] = "Tongan",
+    ["TR"] = "Turkish",
+    ["TT"] = "Trinidadian",
+    ["TV"] = "Tuvaluan",
+    ["TW"] = "Taiwanese",
+    ["TZ"] = "Tanzanian",
+    ["UA"] = "Ukrainian",
+    ["UG"] = "Ugandan",
+    ["UM"] = "American",
+    ["US"] = "American",
+    ["UY"] = "Uruguayan",
+    ["UZ"] = "Uzbekistani",
+    ["VA"] = "Italian",
+    ["VC"] = "Saint Vincentian",
+    ["VD"] = "???",
+    ["VE"] = "Venezuelan",
+    ["VG"] = "Virgin Islander",
+    ["VI"] = "Virgin Islander",
+    ["VN"] = "Vietnamese",
+    ["VU"] = "Ni-Vanuatu",
+    ["WF"] = "Wallis and Futuna Islander",
+    ["WK"] = "???",
+    ["WS"] = "Samoan",
+    ["YE"] = "Yemeni",
+    ["YT"] = "French",
+    ["ZA"] = "South African",
+    ["ZM"] = "Zambian",
+    ["ZW"] = "Zimbabwean"
+}
+
+-- 1. THÊM NHIỀU THEME HƠN (Đã thêm theme mới: Light và Cyber)
+local Themes = {
+    Purple = {
+        Primary = Color3.fromRGB(200, 80, 180),
+        Background = Color3.fromRGB(20, 18, 30),
+        Sidebar = Color3.fromRGB(28, 24, 38),
+        Component = Color3.fromRGB(38, 30, 50)
+    },
+    Blue = {
+        Primary = Color3.fromRGB(66, 135, 245),
+        Background = Color3.fromRGB(15, 20, 30),
+        Sidebar = Color3.fromRGB(20, 28, 40),
+        Component = Color3.fromRGB(30, 40, 55)
+    },
+    Red = {
+        Primary = Color3.fromRGB(245, 66, 66),
+        Background = Color3.fromRGB(25, 15, 18),
+        Sidebar = Color3.fromRGB(35, 20, 25),
+        Component = Color3.fromRGB(45, 28, 32)
+    },
+    Green = {
+        Primary = Color3.fromRGB(66, 245, 135),
+        Background = Color3.fromRGB(15, 25, 20),
+        Sidebar = Color3.fromRGB(20, 35, 28),
+        Component = Color3.fromRGB(28, 45, 38)
+    },
+    Dark = {
+        Primary = Color3.fromRGB(255, 255, 255),
+        Background = Color3.fromRGB(15, 15, 15),
+        Sidebar = Color3.fromRGB(25, 25, 25),
+        Component = Color3.fromRGB(35, 35, 35)
+    },
+    Sakura = {
+        Primary = Color3.fromRGB(255, 105, 180),
+        Background = Color3.fromRGB(40, 20, 25),
+        Sidebar = Color3.fromRGB(50, 25, 30),
+        Component = Color3.fromRGB(60, 35, 40)
+    },
+    Ocean = {
+        Primary = Color3.fromRGB(0, 190, 255),
+        Background = Color3.fromRGB(10, 25, 40),
+        Sidebar = Color3.fromRGB(15, 35, 50),
+        Component = Color3.fromRGB(20, 45, 65)
+    },
+    Midnight = {
+        Primary = Color3.fromRGB(100, 100, 255),
+        Background = Color3.fromRGB(10, 10, 20),
+        Sidebar = Color3.fromRGB(15, 15, 30),
+        Component = Color3.fromRGB(25, 25, 45)
+    },
+    -- Theme mới
+    Light = {
+        Primary = Color3.fromRGB(50, 50, 50),
+        Background = Color3.fromRGB(240, 240, 245),
+        Sidebar = Color3.fromRGB(220, 220, 230),
+        Component = Color3.fromRGB(200, 200, 210)
+    },
+    Cyber = {
+        Primary = Color3.fromRGB(0, 255, 200),
+        Background = Color3.fromRGB(10, 20, 30),
+        Sidebar = Color3.fromRGB(15, 30, 45),
+        Component = Color3.fromRGB(20, 40, 60)
+    }
+}
+
+local CurrentTheme = Themes.Purple
+
+-- Hàm tính luminance để chọn text color contrast
+local function GetContrastText(bgColor)
+    local r, g, b = bgColor.r, bgColor.g, bgColor.b
+    local luminance = (r * 0.299) + (g * 0.587) + (b * 0.114)
+    return luminance > 0.5 and Color3.fromRGB(0, 0, 0) or Color3.fromRGB(255, 255, 255)
+end
+
+-- XỬ LÝ NOTIFICATION FIX (Dùng UIListLayout để không bị chồng)
+local NotifContainer = nil
+local function InitNotifGui()
+    if NotifContainer then return NotifContainer end
+    local existing = CoreGui:FindFirstChild("MinhZ_Notifications")
+    if existing then existing:Destroy() end
+    
+    local gui = Instance.new("ScreenGui", CoreGui)
+    gui.Name = "MinhZ_Notifications"
+    gui.ResetOnSpawn = false
+    
+    NotifContainer = Instance.new("Frame", gui)
+    NotifContainer.Size = UDim2.new(0, 300, 1, 0)
+    NotifContainer.Position = UDim2.new(1, -320, 0, 0)
+    NotifContainer.BackgroundTransparency = 1
+    
+    local layout = Instance.new("UIListLayout", NotifContainer)
+    layout.Padding = UDim.new(0, 10)
+    layout.VerticalAlignment = Enum.VerticalAlignment.Bottom
+    layout.HorizontalAlignment = Enum.HorizontalAlignment.Center
+    layout.SortOrder = Enum.SortOrder.LayoutOrder
+    
+    local pad = Instance.new("UIPadding", NotifContainer)
+    pad.PaddingBottom = UDim.new(0, 20)
+    
+    return NotifContainer
+end
+
+function MinhZ:Notify(options)
+    local title = options.Title or "Notification"
+    local description = options.Description or ""
+    local duration = options.Duration or 3
+    local type = options.Type or "Info"
+    
+    local colors = {
+        Success = Color3.fromRGB(0, 200, 100),
+        Error = Color3.fromRGB(255, 80, 80),
+        Info = Color3.fromRGB(66, 135, 245),
+        Warning = Color3.fromRGB(255, 180, 0)
+    }
+    
+    local container = InitNotifGui()
+    
+    local Notif = Instance.new("Frame", container)
+    Notif.Size = UDim2.new(0, 300, 0, 80)
+    Notif.BackgroundColor3 = CurrentTheme.Component
+    Notif.BackgroundTransparency = 0.1
+    Notif.BorderSizePixel = 0
+    Instance.new("UICorner", Notif).CornerRadius = UDim.new(0, 8)
+    
+    local Accent = Instance.new("Frame", Notif)
+    Accent.Size = UDim2.new(0, 4, 1, 0)
+    Accent.BackgroundColor3 = colors[type] or CurrentTheme.Primary
+    Instance.new("UICorner", Accent).CornerRadius = UDim.new(0, 4)
+
+    local TitleLabel = Instance.new("TextLabel", Notif)
+    TitleLabel.Size = UDim2.new(1, -20, 0, 25)
+    TitleLabel.Position = UDim2.new(0, 15, 0, 8)
+    TitleLabel.BackgroundTransparency = 1
+    TitleLabel.Text = title
+    TitleLabel.TextColor3 = Color3.fromRGB(255, 255, 255)
+    TitleLabel.Font = Enum.Font.GothamBold
+    TitleLabel.TextSize = 14
+    TitleLabel.TextXAlignment = Enum.TextXAlignment.Left
+    
+    local DescLabel = Instance.new("TextLabel", Notif)
+    DescLabel.Size = UDim2.new(1, -20, 0, 40)
+    DescLabel.Position = UDim2.new(0, 15, 0, 32)
+    DescLabel.BackgroundTransparency = 1
+    DescLabel.Text = description
+    DescLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+    DescLabel.Font = Enum.Font.Gotham
+    DescLabel.TextSize = 12
+    DescLabel.TextXAlignment = Enum.TextXAlignment.Left
+    DescLabel.TextWrapped = true
+    
+    -- Animation Effect
+    Notif.BackgroundTransparency = 1
+    DescLabel.TextTransparency = 1
+    TitleLabel.TextTransparency = 1
+    Accent.BackgroundTransparency = 1
+    
+    TweenService:Create(Notif, TweenInfo.new(0.3), {BackgroundTransparency = 0.1}):Play()
+    TweenService:Create(Accent, TweenInfo.new(0.3), {BackgroundTransparency = 0}):Play()
+    TweenService:Create(TitleLabel, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+    TweenService:Create(DescLabel, TweenInfo.new(0.3), {TextTransparency = 0}):Play()
+    
+    task.delay(duration, function()
+        if Notif and Notif.Parent then
+            local tween = TweenService:Create(Notif, TweenInfo.new(0.3), {BackgroundTransparency = 1})
+            TweenService:Create(Accent, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+            TweenService:Create(TitleLabel, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
+            TweenService:Create(DescLabel, TweenInfo.new(0.3), {TextTransparency = 1}):Play()
+            tween:Play()
+            tween.Completed:Wait()
+            Notif:Destroy()
+        end
+    end)
+end
 
 function MinhZ:CreateWindow(titleText)
     for _, gui in pairs(CoreGui:GetChildren()) do
@@ -14,7 +457,7 @@ function MinhZ:CreateWindow(titleText)
     local Main = Instance.new("Frame", ScreenGui)
     Main.Size = UDim2.new(0, 550, 0, 350)
     Main.Position = UDim2.new(0.5, -275, 0.5, -175)
-    Main.BackgroundColor3 = Color3.fromRGB(20, 18, 30)
+    Main.BackgroundColor3 = CurrentTheme.Background
     Main.BorderSizePixel = 0
     Main.ClipsDescendants = true
     Instance.new("UICorner", Main).CornerRadius = UDim.new(0, 10)
@@ -28,7 +471,7 @@ function MinhZ:CreateWindow(titleText)
     Title.Position = UDim2.new(0, 15, 0, 0)
     Title.BackgroundTransparency = 1
     Title.Text = titleText or "MinhZ Library"
-    Title.TextColor3 = Color3.fromRGB(200, 80, 180)
+    Title.TextColor3 = CurrentTheme.Primary
     Title.Font = Enum.Font.GothamBold
     Title.TextSize = 18
     Title.TextXAlignment = Enum.TextXAlignment.Left
@@ -36,7 +479,7 @@ function MinhZ:CreateWindow(titleText)
     local CloseBtn = Instance.new("TextButton", Main)
     CloseBtn.Size = UDim2.new(0, 26, 0, 26)
     CloseBtn.Position = UDim2.new(1, -35, 0, 8)
-    CloseBtn.BackgroundColor3 = Color3.fromRGB(38, 30, 50)
+    CloseBtn.BackgroundColor3 = CurrentTheme.Component
     CloseBtn.Text = "X"
     CloseBtn.TextColor3 = Color3.fromRGB(255, 80, 80)
     CloseBtn.Font = Enum.Font.GothamBold
@@ -45,7 +488,7 @@ function MinhZ:CreateWindow(titleText)
     local MinBtn = Instance.new("TextButton", Main)
     MinBtn.Size = UDim2.new(0, 26, 0, 26)
     MinBtn.Position = UDim2.new(1, -68, 0, 8)
-    MinBtn.BackgroundColor3 = Color3.fromRGB(38, 30, 50)
+    MinBtn.BackgroundColor3 = CurrentTheme.Component
     MinBtn.Text = "-"
     MinBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
     MinBtn.Font = Enum.Font.GothamBold
@@ -54,7 +497,7 @@ function MinhZ:CreateWindow(titleText)
     local Sidebar = Instance.new("ScrollingFrame", Main)
     Sidebar.Size = UDim2.new(0, 150, 1, -55)
     Sidebar.Position = UDim2.new(0, 10, 0, 45)
-    Sidebar.BackgroundColor3 = Color3.fromRGB(28, 24, 38)
+    Sidebar.BackgroundColor3 = CurrentTheme.Sidebar
     Sidebar.ScrollBarThickness = 0
     Instance.new("UICorner", Sidebar).CornerRadius = UDim.new(0, 6)
     local SideLayout = Instance.new("UIListLayout", Sidebar)
@@ -67,6 +510,7 @@ function MinhZ:CreateWindow(titleText)
     TabContainer.Position = UDim2.new(0, 165, 0, 45)
     TabContainer.BackgroundTransparency = 1
 
+    -- Dragging & Minimize Logic
     local minimized = false
     MinBtn.MouseButton1Click:Connect(function()
         minimized = not minimized
@@ -94,59 +538,269 @@ function MinhZ:CreateWindow(titleText)
     local WindowFuncs = {}
     local FirstTab = true
 
+    -- Hàm refresh theme full (recurse update all elements)
+    local function RefreshTheme(element, oldTheme)
+        if element:IsA("Frame") then
+            if element.BackgroundColor3 == oldTheme.Background then
+                element.BackgroundColor3 = CurrentTheme.Background
+            elseif element.BackgroundColor3 == oldTheme.Sidebar then
+                element.BackgroundColor3 = CurrentTheme.Sidebar
+            elseif element.BackgroundColor3 == oldTheme.Component then
+                element.BackgroundColor3 = CurrentTheme.Component
+            elseif element.BackgroundColor3 == oldTheme.Primary then
+                element.BackgroundColor3 = CurrentTheme.Primary
+            end
+        elseif element:IsA("ScrollingFrame") then
+            if element.BackgroundColor3 == oldTheme.Sidebar then
+                element.BackgroundColor3 = CurrentTheme.Sidebar
+            end
+            if element.ScrollBarImageColor3 == oldTheme.Primary then
+                element.ScrollBarImageColor3 = CurrentTheme.Primary
+            end
+        elseif element:IsA("TextLabel") or element:IsA("TextButton") then
+            if element.TextColor3 == oldTheme.Primary then
+                element.TextColor3 = CurrentTheme.Primary
+            end
+            -- Special for active tabs/buttons
+            if element.BackgroundColor3 == CurrentTheme.Primary then
+                element.TextColor3 = GetContrastText(CurrentTheme.Primary)
+            end
+            if element.BackgroundColor3 == oldTheme.Background then
+                element.BackgroundColor3 = CurrentTheme.Background
+            elseif element.BackgroundColor3 == oldTheme.Component then
+                element.BackgroundColor3 = CurrentTheme.Component
+            end
+        elseif element:IsA("ImageLabel") then
+            -- Update if needed, e.g., for fills in sliders
+        end
+        -- Recurse children
+        for _, child in pairs(element:GetChildren()) do
+            RefreshTheme(child, oldTheme)
+        end
+    end
+
+    function WindowFuncs:SetTheme(themeName)
+        if Themes[themeName] then
+            local oldTheme = CurrentTheme
+            CurrentTheme = Themes[themeName]
+            -- Update root elements
+            Main.BackgroundColor3 = CurrentTheme.Background
+            Sidebar.BackgroundColor3 = CurrentTheme.Sidebar
+            Title.TextColor3 = CurrentTheme.Primary
+            CloseBtn.BackgroundColor3 = CurrentTheme.Component
+            MinBtn.BackgroundColor3 = CurrentTheme.Component
+            -- Full refresh
+            RefreshTheme(Main, oldTheme)
+        end
+    end
+
     function WindowFuncs:CreateTab(name)
         local TabContent = Instance.new("ScrollingFrame", TabContainer)
         TabContent.Size = UDim2.new(1, 0, 1, 0)
         TabContent.BackgroundTransparency = 1
         TabContent.Visible = false
         TabContent.ScrollBarThickness = 3
-        TabContent.ScrollBarImageColor3 = Color3.fromRGB(200, 80, 180)
+        TabContent.ScrollBarImageColor3 = CurrentTheme.Primary
         TabContent.AutomaticCanvasSize = Enum.AutomaticSize.Y
         
         local ContentLayout = Instance.new("UIListLayout", TabContent)
         ContentLayout.Padding = UDim.new(0, 8)
         ContentLayout.SortOrder = Enum.SortOrder.LayoutOrder
         Instance.new("UIPadding", TabContent).PaddingLeft = UDim.new(0, 5)
+        Instance.new("UIPadding", TabContent).PaddingBottom = UDim.new(0, 10)
 
         local TabBtn = Instance.new("TextButton", Sidebar)
         TabBtn.Size = UDim2.new(0, 135, 0, 38)
-        TabBtn.BackgroundColor3 = Color3.fromRGB(20, 18, 30)
+        TabBtn.BackgroundColor3 = CurrentTheme.Background
         TabBtn.Text = name
         TabBtn.TextColor3 = Color3.fromRGB(180, 170, 190)
         TabBtn.Font = Enum.Font.GothamBold
-        TabBtn.TextSize = 15
+        TabBtn.TextSize = 14
         Instance.new("UICorner", TabBtn).CornerRadius = UDim.new(0, 6)
 
         if FirstTab then
             FirstTab = false; TabContent.Visible = true
-            TabBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 180); TabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            TabBtn.BackgroundColor3 = CurrentTheme.Primary; TabBtn.TextColor3 = GetContrastText(CurrentTheme.Primary)
         end
 
         TabBtn.MouseButton1Click:Connect(function()
             for _, v in pairs(TabContainer:GetChildren()) do v.Visible = false end
             for _, v in pairs(Sidebar:GetChildren()) do 
-                if v:IsA("TextButton") then v.BackgroundColor3 = Color3.fromRGB(20, 18, 30); v.TextColor3 = Color3.fromRGB(180, 170, 190) end 
+                if v:IsA("TextButton") then v.BackgroundColor3 = CurrentTheme.Background; v.TextColor3 = Color3.fromRGB(180, 170, 190) end 
             end
             TabContent.Visible = true
-            TabBtn.BackgroundColor3 = Color3.fromRGB(200, 80, 180); TabBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+            TabBtn.BackgroundColor3 = CurrentTheme.Primary; TabBtn.TextColor3 = GetContrastText(CurrentTheme.Primary)
         end)
 
         local TabFuncs = {}
         local order = 0
+
+        -- 2. INFO TAB NÂNG CẤP (BUTTONS + TIME SECONDS + Quốc tịch + Executor + Thời gian tạo tài khoản)
+        function TabFuncs:CreateInfo()
+            order = order + 1
+            local lp = Players.LocalPlayer
+            
+            local InfoFrame = Instance.new("Frame", TabContent)
+            InfoFrame.LayoutOrder = order
+            InfoFrame.Size = UDim2.new(1, -12, 0, 200) -- Giảm chiều cao để fit content, tránh scroll thừa
+            InfoFrame.BackgroundColor3 = CurrentTheme.Component
+            Instance.new("UICorner", InfoFrame).CornerRadius = UDim.new(0, 8)
+            
+            local Avatar = Instance.new("ImageLabel", InfoFrame)
+            Avatar.Size = UDim2.new(0, 70, 0, 70)
+            Avatar.Position = UDim2.new(0, 15, 0, 15)
+            Avatar.Image = Players:GetUserThumbnailAsync(lp.UserId, Enum.ThumbnailType.HeadShot, Enum.ThumbnailSize.Size150x150)
+            Avatar.BackgroundColor3 = CurrentTheme.Background
+            Instance.new("UICorner", Avatar).CornerRadius = UDim.new(0, 10)
+            
+            local Username = Instance.new("TextLabel", InfoFrame)
+            Username.Size = UDim2.new(1, -100, 0, 25)
+            Username.Position = UDim2.new(0, 95, 0, 15)
+            Username.BackgroundTransparency = 1
+            Username.Text = "@" .. lp.Name
+            Username.TextColor3 = Color3.fromRGB(255, 255, 255)
+            Username.Font = Enum.Font.GothamBold
+            Username.TextSize = 16
+            Username.TextXAlignment = Enum.TextXAlignment.Left
+            
+            local DisplayName = Instance.new("TextLabel", InfoFrame)
+            DisplayName.Size = UDim2.new(1, -100, 0, 20)
+            DisplayName.Position = UDim2.new(0, 95, 0, 40)
+            DisplayName.BackgroundTransparency = 1
+            DisplayName.Text = lp.DisplayName
+            DisplayName.TextColor3 = Color3.fromRGB(180, 180, 180)
+            DisplayName.Font = Enum.Font.Gotham
+            DisplayName.TextSize = 13
+            DisplayName.TextXAlignment = Enum.TextXAlignment.Left
+            
+            -- Thêm Quốc tịch (Nationality)
+            local NationalityLabel = Instance.new("TextLabel", InfoFrame)
+            NationalityLabel.Size = UDim2.new(1, -100, 0, 20)
+            NationalityLabel.Position = UDim2.new(0, 95, 0, 60)
+            NationalityLabel.BackgroundTransparency = 1
+            NationalityLabel.Text = "Nationality: Loading..."
+            NationalityLabel.TextColor3 = Color3.fromRGB(180, 180, 180)
+            NationalityLabel.Font = Enum.Font.Gotham
+            NationalityLabel.TextSize = 13
+            NationalityLabel.TextXAlignment = Enum.TextXAlignment.Left
+            
+            task.spawn(function()
+                local success, country = pcall(function()
+                    return LocalizationService:GetCountryRegionForPlayerAsync(lp)
+                end)
+                if success then
+                    local nationality = CountryToNationality[country] or country
+                    NationalityLabel.Text = "Nationality: " .. nationality
+                else
+                    NationalityLabel.Text = "Nationality: Unknown"
+                end
+            end)
+            
+            -- Thêm thời gian tạo tài khoản
+            local CreationLabel = Instance.new("TextLabel", InfoFrame)
+            CreationLabel.Size = UDim2.new(1, -30, 0, 20)
+            CreationLabel.Position = UDim2.new(0, 15, 0, 135)
+            CreationLabel.BackgroundTransparency = 1
+            CreationLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+            CreationLabel.Font = Enum.Font.Gotham
+            CreationLabel.TextSize = 12
+            CreationLabel.TextXAlignment = Enum.TextXAlignment.Left
+            
+            local accountAge = lp.AccountAge  -- days since creation
+            local creationTime = os.time() - (accountAge * 86400)  -- approximate creation timestamp
+            local creationDate = os.date("%Y-%m-%d %H:%M:%S", creationTime)
+            CreationLabel.Text = "Account Created: " .. creationDate
+            
+            -- Executor
+            local ExecutorLabel = Instance.new("TextLabel", InfoFrame)
+            ExecutorLabel.Size = UDim2.new(1, -30, 0, 20)
+            ExecutorLabel.Position = UDim2.new(0, 15, 0, 115)
+            ExecutorLabel.BackgroundTransparency = 1
+            ExecutorLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+            ExecutorLabel.Font = Enum.Font.Gotham
+            ExecutorLabel.TextSize = 12
+            ExecutorLabel.TextXAlignment = Enum.TextXAlignment.Left
+            
+            local executorName = "Unknown"
+            if identifyexecutor then
+                executorName = identifyexecutor() or "Unknown"
+            elseif syn then
+                executorName = "Synapse"
+            elseif fluxus then
+                executorName = "Fluxus"
+            -- Thêm check cho executor khác nếu cần
+            end
+            ExecutorLabel.Text = "Executor: " .. executorName
+
+            local TimeLabel = Instance.new("TextLabel", InfoFrame)
+            TimeLabel.Size = UDim2.new(1, -30, 0, 20)
+            TimeLabel.Position = UDim2.new(0, 15, 0, 95)
+            TimeLabel.BackgroundTransparency = 1
+            TimeLabel.TextColor3 = Color3.fromRGB(200, 200, 200)
+            TimeLabel.Font = Enum.Font.Gotham
+            TimeLabel.TextSize = 12
+            TimeLabel.TextXAlignment = Enum.TextXAlignment.Left
+            TimeLabel.Text = "⏳ Server Time: Loading..."
+
+            -- Realtime Seconds Logic (DistributedGameTime là thời gian từ khi server start, reset khi server mới)
+            task.spawn(function()
+                while InfoFrame.Parent do
+                    local t = workspace.DistributedGameTime
+                    local hours = math.floor(t / 3600)
+                    local mins = math.floor((t % 3600) / 60)
+                    local secs = math.floor(t % 60)
+                    TimeLabel.Text = string.format("⏳ Server Time: %02d:%02d:%02d", hours, mins, secs)
+                    task.wait(1)
+                end
+            end)
+            
+            -- Button Container cho Info
+            local InfoBtnContainer = Instance.new("Frame", InfoFrame)
+            InfoBtnContainer.Size = UDim2.new(1, -30, 0, 35)
+            InfoBtnContainer.Position = UDim2.new(0, 15, 0, 155) -- Đẩy lên để loại gap thừa
+            InfoBtnContainer.BackgroundTransparency = 1
+            
+            local IBLayout = Instance.new("UIListLayout", InfoBtnContainer)
+            IBLayout.FillDirection = Enum.FillDirection.Horizontal
+            IBLayout.Padding = UDim.new(0, 10)
+            
+            local InfoFuncs = {}
+            
+            -- Hàm thêm nút vào Info Tab
+            function InfoFuncs:AddButton(text, callback)
+                local SBtn = Instance.new("TextButton", InfoBtnContainer)
+                SBtn.Size = UDim2.new(0, 100, 1, 0) -- Auto scale width if needed
+                SBtn.BackgroundColor3 = CurrentTheme.Background
+                SBtn.Text = text
+                SBtn.TextColor3 = CurrentTheme.Primary
+                SBtn.Font = Enum.Font.GothamBold
+                SBtn.TextSize = 12
+                Instance.new("UICorner", SBtn).CornerRadius = UDim.new(0, 6)
+                
+                SBtn.MouseButton1Click:Connect(function()
+                    pcall(callback)
+                end)
+            end
+            
+            return InfoFuncs
+        end
 
         function TabFuncs:CreateButton(text, callback)
             order = order + 1
             local Btn = Instance.new("TextButton", TabContent)
             Btn.LayoutOrder = order
             Btn.Size = UDim2.new(1, -12, 0, 42)
-            Btn.BackgroundColor3 = Color3.fromRGB(38, 30, 50)
+            Btn.BackgroundColor3 = CurrentTheme.Component
             Btn.Text = "  " .. text
             Btn.TextColor3 = Color3.fromRGB(240, 240, 245)
             Btn.TextXAlignment = Enum.TextXAlignment.Left
             Btn.Font = Enum.Font.GothamBold
-            Btn.TextSize = 16 
+            Btn.TextSize = 14
             Instance.new("UICorner", Btn).CornerRadius = UDim.new(0, 6)
-            Btn.MouseButton1Click:Connect(function() pcall(callback) end)
+            
+            Btn.MouseButton1Click:Connect(function() 
+                pcall(callback) 
+            end)
         end
 
         function TabFuncs:CreateToggle(text, callback)
@@ -155,29 +809,43 @@ function MinhZ:CreateWindow(titleText)
             local TogFrame = Instance.new("TextButton", TabContent)
             TogFrame.LayoutOrder = order
             TogFrame.Size = UDim2.new(1, -12, 0, 42)
-            TogFrame.BackgroundColor3 = Color3.fromRGB(38, 30, 50)
+            TogFrame.BackgroundColor3 = CurrentTheme.Component
             TogFrame.Text = "  " .. text
             TogFrame.TextColor3 = Color3.fromRGB(240, 240, 245)
             TogFrame.TextXAlignment = Enum.TextXAlignment.Left
             TogFrame.Font = Enum.Font.GothamBold
-            TogFrame.TextSize = 16
+            TogFrame.TextSize = 14
             Instance.new("UICorner", TogFrame).CornerRadius = UDim.new(0, 6)
             
             local Ind = Instance.new("Frame", TogFrame)
-            Ind.Size = UDim2.new(0, 22, 0, 22); Ind.Position = UDim2.new(1, -32, 0.5, -11)
+            Ind.Size = UDim2.new(0, 40, 0, 20)
+            Ind.Position = UDim2.new(1, -50, 0.5, -10)
             Ind.BackgroundColor3 = Color3.fromRGB(60, 50, 70)
-            Instance.new("UICorner", Ind).CornerRadius = UDim.new(0, 4)
+            Instance.new("UICorner", Ind).CornerRadius = UDim.new(1, 0)
+            
+            local Dot = Instance.new("Frame", Ind)
+            Dot.Size = UDim2.new(0, 16, 0, 16)
+            Dot.Position = UDim2.new(0, 2, 0.5, -8)
+            Dot.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Instance.new("UICorner", Dot).CornerRadius = UDim.new(1, 0)
             
             TogFrame.MouseButton1Click:Connect(function()
                 toggled = not toggled
-                Ind.BackgroundColor3 = toggled and Color3.fromRGB(200, 80, 180) or Color3.fromRGB(60, 50, 70)
+                local targetPos = toggled and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
+                local targetColor = toggled and CurrentTheme.Primary or Color3.fromRGB(60, 50, 70)
+                
+                TweenService:Create(Dot, TweenInfo.new(0.2), {Position = targetPos}):Play()
+                TweenService:Create(Ind, TweenInfo.new(0.2), {BackgroundColor3 = targetColor}):Play()
                 pcall(callback, toggled)
             end)
             
             return {
                 Set = function(self, value)
                     toggled = value
-                    Ind.BackgroundColor3 = toggled and Color3.fromRGB(200, 80, 180) or Color3.fromRGB(60, 50, 70)
+                    local targetPos = toggled and UDim2.new(1, -18, 0.5, -8) or UDim2.new(0, 2, 0.5, -8)
+                    local targetColor = toggled and CurrentTheme.Primary or Color3.fromRGB(60, 50, 70)
+                    TweenService:Create(Dot, TweenInfo.new(0.2), {Position = targetPos}):Play()
+                    TweenService:Create(Ind, TweenInfo.new(0.2), {BackgroundColor3 = targetColor}):Play()
                 end
             }
         end
@@ -188,23 +856,37 @@ function MinhZ:CreateWindow(titleText)
             local DropFrame = Instance.new("Frame", TabContent)
             DropFrame.LayoutOrder = order
             DropFrame.Size = UDim2.new(1, -12, 0, 42)
-            DropFrame.BackgroundColor3 = Color3.fromRGB(38, 30, 50)
+            DropFrame.BackgroundColor3 = CurrentTheme.Component
             DropFrame.ClipsDescendants = true
+            DropFrame.ZIndex = 2 -- Fix ZIndex overlap
             Instance.new("UICorner", DropFrame).CornerRadius = UDim.new(0, 6)
 
             local DropBtn = Instance.new("TextButton", DropFrame)
             DropBtn.Size = UDim2.new(1, 0, 0, 42)
             DropBtn.BackgroundTransparency = 1
-            DropBtn.Text = "  " .. text .. " : ..."
+            DropBtn.Text = "  " .. text .. " : Select..."
             DropBtn.TextColor3 = Color3.fromRGB(240, 240, 245)
             DropBtn.TextXAlignment = Enum.TextXAlignment.Left
             DropBtn.Font = Enum.Font.GothamBold
-            DropBtn.TextSize = 16
+            DropBtn.TextSize = 14
+            DropBtn.ZIndex = 2
+
+            local Arrow = Instance.new("TextLabel", DropBtn)
+            Arrow.Size = UDim2.new(0, 30, 0, 42)
+            Arrow.Position = UDim2.new(1, -30, 0, 0)
+            Arrow.BackgroundTransparency = 1
+            Arrow.Text = "▼"
+            Arrow.TextColor3 = Color3.fromRGB(150, 150, 150)
+            Arrow.Font = Enum.Font.GothamBold
+            Arrow.TextSize = 12
+            Arrow.ZIndex = 2
 
             local ListHolder = Instance.new("Frame", DropFrame)
             ListHolder.Size = UDim2.new(1, 0, 0, 0)
             ListHolder.Position = UDim2.new(0, 0, 0, 42)
             ListHolder.BackgroundTransparency = 1
+            ListHolder.ZIndex = 2
+            
             local ListLayout = Instance.new("UIListLayout", ListHolder)
             ListLayout.Padding = UDim.new(0, 5)
             ListLayout.HorizontalAlignment = Enum.HorizontalAlignment.Center
@@ -213,14 +895,10 @@ function MinhZ:CreateWindow(titleText)
                 local listSize = ListLayout.AbsoluteContentSize.Y + 10
                 local targetHeight = dropped and (42 + listSize) or 42
                 
+                Arrow.Text = dropped and "▲" or "▼"
                 if dropped then ListHolder.Size = UDim2.new(1, 0, 0, listSize) end
                 
-                local tween = TweenService:Create(DropFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(1, -12, 0, targetHeight)})
-                tween:Play()
-                
-                tween.Completed:Connect(function()
-                    if not dropped then ListHolder.Size = UDim2.new(1, 0, 0, 0) end
-                end)
+                TweenService:Create(DropFrame, TweenInfo.new(0.3, Enum.EasingStyle.Quart, Enum.EasingDirection.Out), {Size = UDim2.new(1, -12, 0, targetHeight)}):Play()
             end
 
             DropBtn.MouseButton1Click:Connect(function()
@@ -230,13 +908,15 @@ function MinhZ:CreateWindow(titleText)
 
             for _, v in pairs(list) do
                 local Item = Instance.new("TextButton", ListHolder)
-                Item.Size = UDim2.new(1, -15, 0, 35)
-                Item.BackgroundColor3 = Color3.fromRGB(20, 18, 30)
+                Item.Size = UDim2.new(1, -15, 0, 30)
+                Item.BackgroundColor3 = CurrentTheme.Background
                 Item.Text = v
                 Item.TextColor3 = Color3.fromRGB(180, 170, 190)
                 Item.Font = Enum.Font.GothamBold
-                Item.TextSize = 15
+                Item.TextSize = 13
+                Item.ZIndex = 2
                 Instance.new("UICorner", Item).CornerRadius = UDim.new(0, 4)
+                
                 Item.MouseButton1Click:Connect(function()
                     DropBtn.Text = "  " .. text .. " : " .. v
                     dropped = false
@@ -250,34 +930,47 @@ function MinhZ:CreateWindow(titleText)
             order = order + 1
             local SliderFrame = Instance.new("Frame", TabContent)
             SliderFrame.LayoutOrder = order
-            SliderFrame.Size = UDim2.new(1, -12, 0, 55)
-            SliderFrame.BackgroundColor3 = Color3.fromRGB(38, 30, 50)
+            SliderFrame.Size = UDim2.new(1, -12, 0, 60)
+            SliderFrame.BackgroundColor3 = CurrentTheme.Component
             Instance.new("UICorner", SliderFrame).CornerRadius = UDim.new(0, 6)
             
             local Label = Instance.new("TextLabel", SliderFrame)
-            Label.Size = UDim2.new(1, -10, 0, 25); Label.Position = UDim2.new(0, 10, 0, 5)
-            Label.BackgroundTransparency = 1; Label.Text = text .. ": " .. default
-            Label.TextColor3 = Color3.fromRGB(240, 240, 245); Label.TextXAlignment = Enum.TextXAlignment.Left; Label.Font = Enum.Font.GothamBold; Label.TextSize = 15
+            Label.Size = UDim2.new(1, -10, 0, 20); Label.Position = UDim2.new(0, 10, 0, 5)
+            Label.BackgroundTransparency = 1; Label.Text = text
+            Label.TextColor3 = Color3.fromRGB(240, 240, 245); Label.TextXAlignment = Enum.TextXAlignment.Left; Label.Font = Enum.Font.GothamBold; Label.TextSize = 14
+            
+            local ValueLabel = Instance.new("TextLabel", SliderFrame)
+            ValueLabel.Size = UDim2.new(0, 50, 0, 20); ValueLabel.Position = UDim2.new(1, -60, 0, 5)
+            ValueLabel.BackgroundTransparency = 1; ValueLabel.Text = tostring(default)
+            ValueLabel.TextColor3 = CurrentTheme.Primary; ValueLabel.Font = Enum.Font.GothamBold; ValueLabel.TextSize = 14
             
             local Bar = Instance.new("Frame", SliderFrame)
-            Bar.Size = UDim2.new(1, -20, 0, 8); Bar.Position = UDim2.new(0, 10, 0, 35); Bar.BackgroundColor3 = Color3.fromRGB(20, 18, 30)
-            Instance.new("UICorner", Bar)
+            Bar.Size = UDim2.new(1, -20, 0, 6); Bar.Position = UDim2.new(0, 10, 0, 35); Bar.BackgroundColor3 = CurrentTheme.Background
+            Instance.new("UICorner", Bar).CornerRadius = UDim.new(1, 0)
             
             local Fill = Instance.new("Frame", Bar)
-            Fill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0); Fill.BackgroundColor3 = Color3.fromRGB(200, 80, 180)
-            Instance.new("UICorner", Fill)
+            Fill.Size = UDim2.new((default - min) / (max - min), 0, 1, 0); Fill.BackgroundColor3 = CurrentTheme.Primary
+            Instance.new("UICorner", Fill).CornerRadius = UDim.new(1, 0)
+            
+            local Knob = Instance.new("Frame", Fill)
+            Knob.Size = UDim2.new(0, 12, 0, 12); Knob.Position = UDim2.new(1, -6, 0.5, -6)
+            Knob.BackgroundColor3 = Color3.fromRGB(255, 255, 255)
+            Instance.new("UICorner", Knob).CornerRadius = UDim.new(1, 0)
             
             local dragging = false
             local function update(input)
                 local pos = math.clamp((input.Position.X - Bar.AbsolutePosition.X) / Bar.AbsoluteSize.X, 0, 1)
                 local val = math.floor(min + (max - min) * pos)
-                Fill.Size = UDim2.new(pos, 0, 1, 0); Label.Text = text .. ": " .. val; pcall(callback, val)
+                TweenService:Create(Fill, TweenInfo.new(0.1), {Size = UDim2.new(pos, 0, 1, 0)}):Play()
+                ValueLabel.Text = tostring(val)
+                pcall(callback, val)
             end
+            
             SliderFrame.InputBegan:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = true; update(input) end end)
             UserInputService.InputChanged:Connect(function(input) if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then update(input) end end)
             UserInputService.InputEnded:Connect(function(input) if input.UserInputType == Enum.UserInputType.MouseButton1 then dragging = false end end)
         end
-
+        
         function TabFuncs:CreateKeybind(text, defaultKey, callback)
             order = order + 1
             local currentKey = defaultKey or Enum.KeyCode.E
@@ -286,7 +979,7 @@ function MinhZ:CreateWindow(titleText)
             local KeyFrame = Instance.new("TextButton", TabContent)
             KeyFrame.LayoutOrder = order
             KeyFrame.Size = UDim2.new(1, -12, 0, 42)
-            KeyFrame.BackgroundColor3 = Color3.fromRGB(38, 30, 50)
+            KeyFrame.BackgroundColor3 = CurrentTheme.Component
             KeyFrame.Text = "  " .. text
             KeyFrame.TextColor3 = Color3.fromRGB(240, 240, 245)
             KeyFrame.TextXAlignment = Enum.TextXAlignment.Left
@@ -297,9 +990,9 @@ function MinhZ:CreateWindow(titleText)
             local KeyLabel = Instance.new("TextLabel", KeyFrame)
             KeyLabel.Size = UDim2.new(0, 60, 0, 26)
             KeyLabel.Position = UDim2.new(1, -70, 0.5, -13)
-            KeyLabel.BackgroundColor3 = Color3.fromRGB(20, 18, 30)
+            KeyLabel.BackgroundColor3 = CurrentTheme.Background
             KeyLabel.Text = currentKey.Name
-            KeyLabel.TextColor3 = Color3.fromRGB(200, 80, 180)
+            KeyLabel.TextColor3 = CurrentTheme.Primary
             KeyLabel.Font = Enum.Font.GothamBold
             KeyLabel.TextSize = 14
             Instance.new("UICorner", KeyLabel).CornerRadius = UDim.new(0, 4)
@@ -316,7 +1009,7 @@ function MinhZ:CreateWindow(titleText)
                 if input.UserInputType == Enum.UserInputType.Keyboard then
                     currentKey = input.KeyCode
                     KeyLabel.Text = currentKey.Name
-                    KeyLabel.TextColor3 = Color3.fromRGB(200, 80, 180)
+                    KeyLabel.TextColor3 = CurrentTheme.Primary
                     binding = false
                 end
             end)
@@ -337,7 +1030,7 @@ function MinhZ:CreateWindow(titleText)
             local ColorFrame = Instance.new("TextButton", TabContent)
             ColorFrame.LayoutOrder = order
             ColorFrame.Size = UDim2.new(1, -12, 0, 42)
-            ColorFrame.BackgroundColor3 = Color3.fromRGB(38, 30, 50)
+            ColorFrame.BackgroundColor3 = CurrentTheme.Component
             ColorFrame.Text = "  " .. text
             ColorFrame.TextColor3 = Color3.fromRGB(240, 240, 245)
             ColorFrame.TextXAlignment = Enum.TextXAlignment.Left
@@ -359,7 +1052,7 @@ function MinhZ:CreateWindow(titleText)
             
             local ColorPalette = Instance.new("Frame", PickerHolder)
             ColorPalette.Size = UDim2.new(1, -10, 0, 120)
-            ColorPalette.BackgroundColor3 = Color3.fromRGB(20, 18, 30)
+            ColorPalette.BackgroundColor3 = CurrentTheme.Background
             Instance.new("UICorner", ColorPalette).CornerRadius = UDim.new(0, 4)
             
             local PaletteLayout = Instance.new("UIGridLayout", ColorPalette)
