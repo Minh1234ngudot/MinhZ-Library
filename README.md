@@ -1,240 +1,458 @@
-# ⚡ MinhZ Library v2
+# 🎨 MinhZ Library - Roblox UI Library
 
-A modern, clean and feature-rich UI Library for Roblox scripts with beautiful animations and smooth interactions.
+A modern, feature-rich UI library for Roblox with automatic decimal slider support, beautiful themes, and smooth animations.
 
-![Version](https://img.shields.io/badge/version-2.0-purple)
-![License](https://img.shields.io/badge/license-MIT-blue)
+![Version](https://img.shields.io/badge/version-1.0.0-blue)
 ![Roblox](https://img.shields.io/badge/platform-Roblox-red)
+![License](https://img.shields.io/badge/license-MIT-green)
 
 ## ✨ Features
 
-- 🎨 **Modern Dark Theme** - Beautiful purple/pink gradient design
-- 🖱️ **Draggable Window** - Move the UI anywhere on screen
-- 📱 **Minimizable** - Clean minimize/close buttons
-- 🔄 **Smooth Animations** - TweenService powered transitions
-- 📦 **6 Component Types** - Everything you need for a complete GUI
-- 🎯 **Auto Canvas Sizing** - Scrolling frames adjust automatically
-- 💾 **Easy to Use** - Simple and intuitive API
+### 🎯 Core Features
+- **Modern Design** - Clean, professional UI with smooth animations
+- **10+ Themes** - Purple, Blue, Red, Green, Dark, Sakura, Ocean, Midnight, Light, Cyber
+- **Mobile Support** - Fully responsive with touch controls
+- **Drag & Drop** - Movable windows
+- **Minimize Function** - Collapsible interface
 
-## 📦 Components
+### 🧩 UI Components
+- ✅ **Buttons** - Click actions
+- 🔘 **Toggles** - On/off switches with smooth animations
+- 📋 **Dropdowns** - Selection lists
+- 🎚️ **Sliders** - Automatic decimal/integer detection
+- ⌨️ **Keybinds** - Key binding system
+- 🎨 **Color Pickers** - 15-color palette
+- 📝 **Textboxes** - Text input fields
+- 🏷️ **Labels** - Static text display
+- 📑 **Sections** - Visual dividers with headers
+- ℹ️ **Info Panel** - Player avatar, stats, executor info, server time
 
-| Component | Description |
-|-----------|-------------|
-| **Button** | Simple clickable button |
-| **Toggle** | ON/OFF switch with indicator |
-| **Dropdown** | Expandable selection menu |
-| **Slider** | Value adjuster with visual feedback |
-| **Keybind** | Custom keybind selector |
-| **ColorPicker** | Color palette with 15 preset colors |
+### 🔔 Notifications
+- Multiple types: Success, Error, Info, Warning
+- Auto-fade animations
+- Customizable duration
+- Stacking system
 
-## 🚀 Installation
+## 📦 Installation
 
-### Method 1: Loadstring (Recommended)
+### Method 1: Direct Load (Recommended)
 ```lua
 local MinhZ = loadstring(game:HttpGet("https://raw.githubusercontent.com/Minh1234ngudot/MinhZ-Library/refs/heads/main/MinhZ-Lib-Scr"))()
 ```
 
-### Method 2: Local Module
-1. Download the library file
-2. Place it in your script folder
-3. Require it:
-```lua
-local MinhZ = require(path.to.MinhZLibrary)
-```
+### Method 2: Local File
+1. Download `MinhZ_Library_Fixed.lua`
+2. Load it in your executor
 
-## 📖 Quick Start
+## 🚀 Quick Start
 
-### Basic Setup
+### Basic Window Setup
 ```lua
 local MinhZ = loadstring(game:HttpGet("https://raw.githubusercontent.com/Minh1234ngudot/MinhZ-Library/refs/heads/main/MinhZ-Lib-Scr"))()
+
+-- Create window
 local Window = MinhZ:CreateWindow("My Script")
 
-local Tab1 = Window:CreateTab("Main")
-local Tab2 = Window:CreateTab("Settings")
-```
+-- Create tab
+local Tab = Window:CreateTab("Main")
 
-### Creating Components
-
-#### Button
-```lua
-Tab1:CreateButton("Click Me", function()
+-- Add components
+Tab:CreateButton("Click Me", function()
     print("Button clicked!")
 end)
 ```
 
-#### Toggle
+### Complete Example
 ```lua
-local MyToggle = Tab1:CreateToggle("Enable Feature", function(value)
-    print("Toggle is now:", value)
+local MinhZ = loadstring(game:HttpGet("YOUR_URL"))()
+local Window = MinhZ:CreateWindow("⚡ My Hub ⚡")
+
+-- Change theme
+Window:SetTheme("Ocean")
+
+-- Create tabs
+local MainTab = Window:CreateTab("Main")
+local SettingsTab = Window:CreateTab("Settings")
+
+-- Add components
+MainTab:CreateButton("Test Button", function()
+    print("Clicked!")
 end)
 
--- Update toggle from code
-MyToggle:Set(true)  -- Turn ON
-MyToggle:Set(false) -- Turn OFF
+local toggle = MainTab:CreateToggle("Enable Feature", function(state)
+    print("Toggle:", state)
+end)
+
+-- Slider with automatic decimal detection
+MainTab:CreateSlider("Speed", 0, 1, 0.5, function(value)
+    print("Value:", value) -- 0.00, 0.01, 0.02...
+end)
+
+-- Manual increment (optional)
+MainTab:CreateSlider("FOV", 0, 180, 90, function(value)
+    print("FOV:", value)
+end, 1) -- Force integer
+
+-- Dropdown
+MainTab:CreateDropdown("Select Mode", {"Mode 1", "Mode 2", "Mode 3"}, function(value)
+    print("Selected:", value)
+end)
+
+-- Keybind
+MainTab:CreateKeybind("Toggle Key", Enum.KeyCode.E, function()
+    print("Key pressed!")
+end)
+
+-- Color Picker
+MainTab:CreateColorPicker("ESP Color", Color3.fromRGB(255, 0, 0), function(color)
+    print("Color:", color)
+end)
+
+-- Textbox
+local textbox = MainTab:CreateTextbox("Enter Name", "Type here...", function(text)
+    print("Input:", text)
+end)
+
+-- Label
+local label = MainTab:CreateLabel("This is a label")
+
+-- Section (divider)
+MainTab:CreateSection("Section Title")
+
+-- Info Panel
+local Info = MainTab:CreateInfo()
+Info:AddButton("Rejoin", function()
+    game:GetService("TeleportService"):Teleport(game.PlaceId)
+end)
 ```
 
-#### Dropdown
-```lua
-Tab1:CreateDropdown("Select Mode", {"Option 1", "Option 2", "Option 3"}, function(selected)
-    print("Selected:", selected)
-end)
-```
-
-#### Slider
-```lua
-Tab1:CreateSlider("Speed", 1, 100, 50, function(value)
-    print("Speed set to:", value)
-end)
--- Parameters: (name, min, max, default, callback)
-```
-
-#### Keybind
-```lua
-Tab1:CreateKeybind("Toggle Fly", Enum.KeyCode.F, function()
-    print("F key pressed!")
-end)
--- Click the keybind to change the key
-```
-
-#### ColorPicker
-```lua
-Tab1:CreateColorPicker("ESP Color", Color3.fromRGB(255, 0, 0), function(color)
-    print("Color selected:", color)
-end)
-```
-
-## 🎯 Advanced Examples
-
-### Synced Toggle with Keybind
-```lua
-local enabled = false
-
-local MyToggle = Tab:CreateToggle("Enable Feature", function(value)
-    enabled = value
-    print("Feature:", enabled and "ON" or "OFF")
-end)
-
-Tab:CreateKeybind("Toggle Key", Enum.KeyCode.E, function()
-    enabled = not enabled
-    MyToggle:Set(enabled)  -- Sync UI
-    print("Feature:", enabled and "ON" or "OFF")
-end)
-```
-
-### Multiple Tabs with Different Features
-```lua
-local Window = MinhZ:CreateWindow("Advanced Script")
-
--- Combat Tab
-local Combat = Window:CreateTab("Combat")
-Combat:CreateToggle("Aimbot", function(v) _G.Aimbot = v end)
-Combat:CreateSlider("FOV", 50, 400, 150, function(v) _G.AimbotFOV = v end)
-Combat:CreateKeybind("Aimbot Key", Enum.KeyCode.E, function() 
-    -- Your aimbot logic
-end)
-
--- Visuals Tab
-local Visual = Window:CreateTab("Visuals")
-Visual:CreateToggle("ESP", function(v) _G.ESP = v end)
-Visual:CreateColorPicker("ESP Color", Color3.fromRGB(255, 0, 0), function(c)
-    _G.ESPColor = c
-end)
-
--- Movement Tab
-local Movement = Window:CreateTab("Movement")
-Movement:CreateToggle("Fly", function(v) _G.Flying = v end)
-Movement:CreateSlider("Fly Speed", 1, 10, 5, function(v) _G.FlySpeed = v end)
-```
-
-## 🎨 Customization
-
-### Default Colors
-```lua
--- Main Theme
-Background: Color3.fromRGB(20, 18, 30)
-Sidebar: Color3.fromRGB(28, 24, 38)
-Component: Color3.fromRGB(38, 30, 50)
-
--- Accent Colors
-Primary: Color3.fromRGB(200, 80, 180)  -- Purple-Pink
-Text: Color3.fromRGB(240, 240, 245)    -- Light Gray
-```
-
-### Window Size
-Default: **550x350** pixels
-- Can be minimized to **550x40** (header only)
-- Centered on screen by default
-- Draggable to any position
-
-## 📝 API Reference
+## 📖 API Reference
 
 ### Window Functions
+
+#### `MinhZ:CreateWindow(title)`
+Creates a new window.
 ```lua
-MinhZ:CreateWindow(title: string) -> WindowObject
+local Window = MinhZ:CreateWindow("My Script")
 ```
 
-### Window Methods
+#### `Window:SetTheme(themeName)`
+Changes the window theme.
 ```lua
-Window:CreateTab(name: string) -> TabObject
+Window:SetTheme("Ocean")
+```
+**Available Themes:** `Purple`, `Blue`, `Red`, `Green`, `Dark`, `Sakura`, `Ocean`, `Midnight`, `Light`, `Cyber`
+
+#### `Window:Toggle()`
+Shows/hides the window.
+```lua
+Window:Toggle()
 ```
 
-### Tab Methods
+#### `Window:CreateTab(name)`
+Creates a new tab.
 ```lua
-Tab:CreateButton(text: string, callback: function)
-Tab:CreateToggle(text: string, callback: function(value: boolean)) -> ToggleObject
-Tab:CreateDropdown(text: string, options: table, callback: function(selected: string))
-Tab:CreateSlider(text: string, min: number, max: number, default: number, callback: function(value: number))
-Tab:CreateKeybind(text: string, defaultKey: KeyCode, callback: function)
-Tab:CreateColorPicker(text: string, defaultColor: Color3, callback: function(color: Color3))
+local Tab = Window:CreateTab("Main")
 ```
 
-### Toggle Object Methods
+### Tab Components
+
+#### `Tab:CreateButton(text, callback)`
 ```lua
-Toggle:Set(value: boolean) -- Update toggle state
+Tab:CreateButton("Click Me", function()
+    print("Clicked!")
+end)
 ```
 
-## 🔧 Troubleshooting
+#### `Tab:CreateToggle(text, callback)`
+```lua
+local toggle = Tab:CreateToggle("Enable", function(state)
+    print("State:", state)
+end)
 
-### UI not loading?
-- Make sure you're using the correct loadstring URL
-- Check if your executor supports `game:HttpGet()`
-- Verify that `syn.protect_gui` or equivalent is available
+-- Programmatically set state
+toggle:Set(true)
+```
 
-### Components not working?
-- Ensure callbacks are valid functions
-- Check for typos in parameter names
-- Use `pcall()` to catch errors in callbacks
+#### `Tab:CreateSlider(text, min, max, default, callback, increment?)`
+```lua
+-- Auto-detect increment (recommended)
+Tab:CreateSlider("Speed", 0, 1, 0.5, function(value)
+    print(value) -- 0.00, 0.01, 0.02...
+end)
 
-### Keybind not detecting?
-- Click the keybind UI element first
-- Wait for "..." to appear
-- Press your desired key
-- Check if key is already bound to Roblox functions
+-- Manual increment
+Tab:CreateSlider("FOV", 50, 120, 90, function(value)
+    print(value)
+end, 5) -- Steps of 5
+```
 
-## 🤝 Contributing
+**Auto-Detection Logic:**
+- Range ≤ 1 → increment = 0.01
+- Range ≤ 10 → increment = 0.1
+- Range > 10 → increment = 1
 
-Contributions are welcome! Feel free to:
-- Report bugs
-- Suggest new features
-- Submit pull requests
-- Improve documentation
+#### `Tab:CreateDropdown(text, options, callback)`
+```lua
+Tab:CreateDropdown("Mode", {"Option 1", "Option 2"}, function(value)
+    print("Selected:", value)
+end)
+```
 
-## 📄 License
+#### `Tab:CreateKeybind(text, defaultKey, callback)`
+```lua
+Tab:CreateKeybind("Toggle", Enum.KeyCode.E, function()
+    print("Key pressed!")
+end)
+```
 
-MIT License - Feel free to use in your projects!
+#### `Tab:CreateColorPicker(text, defaultColor, callback)`
+```lua
+Tab:CreateColorPicker("Color", Color3.fromRGB(255, 0, 0), function(color)
+    print("Color:", color)
+end)
+```
 
-## 💬 Support
+#### `Tab:CreateTextbox(text, placeholder, callback)`
+```lua
+local textbox = Tab:CreateTextbox("Name", "Enter name...", function(text)
+    print("Input:", text)
+end)
 
-- **Discord**: [Join Discord For Support](https://www.discord.gg/4tkJqrZv4m)
-- **GitHub Issues**: Report bugs here
-- **Roblox**: [My Profile Roblox](https://www.roblox.com/users/9773437936/profile)
+-- Methods
+textbox:SetText("New text")
+local text = textbox:GetText()
+```
+
+#### `Tab:CreateLabel(text)`
+```lua
+local label = Tab:CreateLabel("This is a label")
+
+-- Update label
+label:SetText("New text")
+```
+
+#### `Tab:CreateSection(text)`
+```lua
+Tab:CreateSection("Settings")
+```
+
+#### `Tab:CreateInfo()`
+```lua
+local Info = Tab:CreateInfo()
+
+-- Add buttons to info panel
+Info:AddButton("Rejoin", function()
+    game:GetService("TeleportService"):Teleport(game.PlaceId)
+end)
+
+Info:AddButton("Copy Discord", function()
+    setclipboard("discord.gg/your_invite")
+end)
+```
+
+### Notifications
+
+#### `MinhZ:Notify(options)`
+```lua
+MinhZ:Notify({
+    Title = "Success",
+    Description = "Action completed!",
+    Duration = 3,
+    Type = "Success" -- Success, Error, Info, Warning
+})
+```
+
+**Options:**
+- `Title` (string) - Notification title
+- `Description` (string) - Notification message
+- `Duration` (number) - Display duration in seconds (default: 3)
+- `Type` (string) - "Success", "Error", "Info", "Warning" (default: "Info")
+
+## 🎨 Themes
+
+| Theme | Primary Color | Use Case |
+|-------|--------------|----------|
+| Purple | Pink-Purple | Default, feminine |
+| Blue | Sky Blue | Professional, clean |
+| Red | Bright Red | Aggressive, combat |
+| Green | Mint Green | Nature, calm |
+| Dark | White on Black | Minimalist, stealthy |
+| Sakura | Hot Pink | Anime, cute |
+| Ocean | Cyan | Water, cool |
+| Midnight | Purple-Blue | Dark, mysterious |
+| Light | Dark on Light | High visibility |
+| Cyber | Neon Cyan | Futuristic, tech |
+
+## 🎯 Slider Examples
+
+### Automatic Detection (Recommended)
+```lua
+-- Small range (0-1) → 0.01 increment
+Tab:CreateSlider("Transparency", 0, 1, 0.5, function(val)
+    workspace.Part.Transparency = val
+end)
+
+-- Medium range (0-10) → 0.1 increment  
+Tab:CreateSlider("WalkSpeed Multiplier", 0, 5, 1, function(val)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = 16 * val
+end)
+
+-- Large range (10-500) → 1 increment
+Tab:CreateSlider("FOV", 50, 120, 90, function(val)
+    workspace.CurrentCamera.FieldOfView = val
+end)
+```
+
+### Manual Increment
+```lua
+-- Force 0.01 precision
+Tab:CreateSlider("Aim Smoothness", 0, 1, 0.5, function(val)
+    settings.smoothness = val
+end, 0.01)
+
+-- Force integer
+Tab:CreateSlider("Max Players", 1, 100, 50, function(val)
+    settings.maxPlayers = val
+end, 1)
+
+-- Custom increment
+Tab:CreateSlider("Volume", 0, 100, 50, function(val)
+    sound.Volume = val / 100
+end, 5) -- Steps of 5
+```
+
+## 📋 Best Practices
+
+### 1. Organization
+```lua
+-- Group related settings in sections
+Tab:CreateSection("Movement")
+Tab:CreateSlider("Speed", ...)
+Tab:CreateSlider("Jump Power", ...)
+
+Tab:CreateSection("Visuals")
+Tab:CreateToggle("ESP", ...)
+Tab:CreateColorPicker("ESP Color", ...)
+```
+
+### 2. User Feedback
+```lua
+Tab:CreateButton("Execute", function()
+    -- Do action
+    executeAction()
+    
+    -- Notify user
+    MinhZ:Notify({
+        Title = "Success",
+        Description = "Action executed!",
+        Type = "Success"
+    })
+end)
+```
+
+### 3. State Management
+```lua
+-- Save toggle references
+local toggles = {}
+
+toggles.esp = Tab:CreateToggle("ESP", function(state)
+    config.esp = state
+end)
+
+-- Later: programmatically set
+toggles.esp:Set(true)
+```
+
+### 4. Info Panel Usage
+```lua
+local Info = Tab:CreateInfo()
+
+Info:AddButton("Rejoin Server", function()
+    game:GetService("TeleportService"):Teleport(game.PlaceId)
+end)
+
+Info:AddButton("Copy Discord", function()
+    setclipboard("discord.gg/invite")
+    MinhZ:Notify({
+        Title = "Discord",
+        Description = "Copied to clipboard!",
+        Type = "Success"
+    })
+end)
+```
+
+## 🔧 Advanced Features
+
+### Custom Theme Creation
+Themes are stored in the library. To add custom themes, modify the `Themes` table:
+```lua
+Themes.MyTheme = {
+    Primary = Color3.fromRGB(255, 0, 255),
+    Background = Color3.fromRGB(20, 20, 20),
+    Sidebar = Color3.fromRGB(30, 30, 30),
+    Component = Color3.fromRGB(40, 40, 40)
+}
+```
+
+### Info Panel Details
+The info panel automatically displays:
+- Player avatar (150x150)
+- Username (@username)
+- Display name
+- Nationality (auto-detected)
+- Account creation date
+- Executor name
+- Server uptime (real-time)
+
+## 🐛 Troubleshooting
+
+### Sliders Only Show Integers
+**Problem:** Slider shows `0, 1, 2` instead of `0.01, 0.02, 0.03`
+
+**Solution:** Update to the latest library version with automatic increment detection.
+
+### UI Not Showing on Mobile
+**Problem:** UI doesn't appear on mobile devices
+
+**Solution:** The library includes a hamburger menu button (☰) in the top-left corner for mobile users.
+
+### Theme Not Changing
+**Problem:** `Window:SetTheme()` doesn't work
+
+**Solution:** Make sure the theme name is spelled correctly (case-sensitive):
+```lua
+Window:SetTheme("Ocean") -- ✅ Correct
+Window:SetTheme("ocean") -- ❌ Wrong
+```
+
+## 📜 License
+
+MIT License - Free to use and modify
+
+## 🤝 Credits
+
+- **Created by:** MinhZ
+- **Slider Fix:** Advanced decimal detection system
+- **Special Thanks:** Community feedback and testing
+
+## 📞 Support
+
+- **Discord:** [https://discord.gg/4tkJqrZv4m]
+- **GitHub:** [https://github.com/Minh1234ngudot]
+
+## 📝 Changelog
+
+### v1.0.0 (Latest)
+- ✨ Added automatic decimal slider detection
+- 🎨 10 pre-built themes
+- 📱 Full mobile support
+- 🔔 Notification system
+- ℹ️ Info panel with real-time stats
+- 🎨 Color picker with 15 colors
+- ⌨️ Keybind system
+- 📋 All core UI components
 
 ---
 
-<div align="center">
-
-**Made with ❤️ by MinhZ**
-
-⭐ Star this repo if you found it helpful!
-
-</div>
+Made with ❤️ by MinhZ | Star ⭐ if you like it!
