@@ -438,8 +438,8 @@ MIT License - Free to use and modify
 
 ## 📞 Support
 
-- **Discord:** [https://discord.gg/4tkJqrZv4m]
-- **GitHub:** [https://github.com/Minh1234ngudot]
+- **Discord:** [Discord Here](https://discord.gg/4tkJqrZv4m)
+- **GitHub:** [GitHub Here](https://github.com/Minh1234ngudot)
 
 ## 📝 Changelog
 
