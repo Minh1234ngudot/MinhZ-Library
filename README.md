@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=7B2FBE&height=200&section=header&text=MinhZ%20Library&fontSize=60&fontColor=ffffff&fontAlignY=38&desc=A%20modern%20UI%20Library%20for%20Roblox%20scripts&descAlignY=60&descColor=e0c8ff" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=7B2FBE&height=200&section=header&text=MinhZ%20Library&fontSize=60&fontColor=ffffff&fontAlignY=38&desc=A%20Modern%20UI%20Library%20For%20Roblox%20Scripts&descAlignY=60&descColor=e0c8ff" width="100%"/>
 
 ![Lua](https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white)
 ![Roblox](https://img.shields.io/badge/Roblox-000000?style=for-the-badge&logo=roblox&logoColor=white)
