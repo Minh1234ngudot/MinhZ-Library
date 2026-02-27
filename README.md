@@ -39,7 +39,7 @@ local MinhZ = loadstring(game:HttpGet("https://raw.githubusercontent.com/Minh123
 ## 🚀 Quick Start
 
 ```lua
-local MinhZ = loadstring(game:HttpGet("https://raw.githubusercontent.com/Minh1234ngudot/MinhZ-Library/refs/heads/main/MinhZ-Lib-Scr))()
+local MinhZ = loadstring(game:HttpGet("https://raw.githubusercontent.com/Minh1234ngudot/MinhZ-Library/refs/heads/main/MinhZ-Lib-Scr"))()
 
 local Window = MinhZ:CreateWindow("My Script")
 
