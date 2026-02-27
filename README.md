@@ -341,8 +341,9 @@ end)
 Settings:CreateLabel("MinhZ Library v2.0.0")
 ```
 
----
+</details>
 
+---
 ## 📄 License
 
 Licensed Under The **MIT License** — Free To Use, Modify, And Distribute With Credit.
