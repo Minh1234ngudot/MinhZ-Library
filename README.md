@@ -1,12 +1,12 @@
 <div align="center">
 
-<img src="https://capsule-render.vercel.app/api?type=waving&color=7B2FBE&height=200&section=header&text=MinhZ%20Library&fontSize=60&fontColor=ffffff&fontAlignY=38&desc=A%20modern%20UI%20library%20for%20Roblox%20scripts&descAlignY=60&descColor=e0c8ff" width="100%"/>
+<img src="https://capsule-render.vercel.app/api?type=waving&color=7B2FBE&height=200&section=header&text=MinhZ%20Library&fontSize=60&fontColor=ffffff&fontAlignY=38&desc=A%20modern%20UI%20Library%20for%20Roblox%20scripts&descAlignY=60&descColor=e0c8ff" width="100%"/>
 
 ![Lua](https://img.shields.io/badge/Lua-2C2D72?style=for-the-badge&logo=lua&logoColor=white)
 ![Roblox](https://img.shields.io/badge/Roblox-000000?style=for-the-badge&logo=roblox&logoColor=white)
 ![Version](https://img.shields.io/badge/version-2.0.0-blueviolet?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
-![Stars](https://img.shields.io/github/stars/yourname/MinhZ_Library?style=for-the-badge&color=yellow)
+![Stars](https://img.shields.io/github/stars/Minh1234ngudot/MinhZ_Library?style=for-the-badge&color=yellow)
 
 **Clean · Fast · Beautiful**
 
@@ -40,7 +40,7 @@ local MinhZ = loadstring(game:HttpGet("https://raw.githubusercontent.com/Minh123
 ## 🚀 Quick Start
 
 ```lua
-local MinhZ = loadstring(game:HttpGet("[RAW_URL_HERE](https://raw.githubusercontent.com/Minh1234ngudot/MinhZ-Library/refs/heads/main/MinhZ-Lib-Scr)"))()
+local MinhZ = loadstring(game:HttpGet("https://raw.githubusercontent.com/Minh1234ngudot/MinhZ-Library/refs/heads/main/MinhZ-Lib-Scr))()
 
 local Window = MinhZ:CreateWindow("My Script")
 
