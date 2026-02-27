@@ -345,13 +345,13 @@ Settings:CreateLabel("MinhZ Library v2.0.0")
 
 ## 📄 License
 
-Licensed under the **MIT License** — free to use, modify, and distribute with credit.
+Licensed Under The **MIT License** — Free To Use, Modify, And Distribute With Credit.
 
 ---
 
 <div align="center">
 
-Made with ❤️ by **MinhZ**
+Made with ❤️ By **MinhZ**
 
 <img src="https://capsule-render.vercel.app/api?type=waving&color=7B2FBE&height=100&section=footer" width="100%"/>
 
