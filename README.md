@@ -6,7 +6,6 @@
 ![Roblox](https://img.shields.io/badge/Roblox-000000?style=for-the-badge&logo=roblox&logoColor=white)
 ![Version](https://img.shields.io/badge/version-2.0.0-blueviolet?style=for-the-badge)
 ![License](https://img.shields.io/badge/license-MIT-green?style=for-the-badge)
-![Stars](https://img.shields.io/github/stars/Minh1234ngudot/MinhZ_Library?style=for-the-badge&color=yellow)
 
 **Clean · Fast · Beautiful**
 
