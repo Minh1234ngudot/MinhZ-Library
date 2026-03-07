@@ -184,7 +184,6 @@ function MinhZ:Notify(options)
     Notif.BorderSizePixel = 0
     Instance.new("UICorner", Notif).CornerRadius = UDim.new(0, 10)
 
-    -- background blur layer
     local NotifBg2 = Instance.new("Frame", Notif)
     NotifBg2.Size = UDim2.new(1, 0, 1, 0)
     NotifBg2.BackgroundColor3 = accentColor
@@ -197,7 +196,6 @@ function MinhZ:Notify(options)
     NotifStroke.Thickness = 1.2
     NotifStroke.Transparency = 1
 
-    -- Left color bar
     local Accent = Instance.new("Frame", Notif)
     Accent.Size = UDim2.new(0, 3, 1, -18)
     Accent.Position = UDim2.new(0, 10, 0, 9)
@@ -206,7 +204,6 @@ function MinhZ:Notify(options)
     Accent.BorderSizePixel = 0
     Instance.new("UICorner", Accent).CornerRadius = UDim.new(1, 0)
 
-    -- Type icon circle
     local IconCircle = Instance.new("Frame", Notif)
     IconCircle.Size = UDim2.new(0, 28, 0, 28)
     IconCircle.Position = UDim2.new(0, 20, 0, 12)
@@ -247,7 +244,6 @@ function MinhZ:Notify(options)
     DescLabel.TextXAlignment = Enum.TextXAlignment.Left
     DescLabel.TextWrapped = true
 
-    -- Progress bar
     local ProgressBg = Instance.new("Frame", Notif)
     ProgressBg.Size = UDim2.new(1, -20, 0, 2)
     ProgressBg.Position = UDim2.new(0, 10, 1, -7)
@@ -263,7 +259,6 @@ function MinhZ:Notify(options)
     ProgressFill.BorderSizePixel = 0
     Instance.new("UICorner", ProgressFill).CornerRadius = UDim.new(1, 0)
 
-    -- Animate in
     local tweenIn = TweenInfo.new(0.35, Enum.EasingStyle.Quart)
     TweenService:Create(Notif,       tweenIn, {BackgroundTransparency = 0.1}):Play()
     TweenService:Create(NotifBg2,    tweenIn, {BackgroundTransparency = 0.94}):Play()
@@ -297,8 +292,6 @@ function MinhZ:Notify(options)
     end)
 end
 
--- titleText : window title
--- iconImage : optional rbxassetid:// shown in header and on the mobile toggle button
 function MinhZ:CreateWindow(titleText, iconImage)
     for _, gui in pairs(CoreGui:GetChildren()) do
         if gui.Name == "MinhZ_Library" then gui:Destroy() end
@@ -415,7 +408,6 @@ function MinhZ:CreateWindow(titleText, iconImage)
     MinBtn.MouseEnter:Connect(function()  TweenService:Create(MinBtn,    TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(255, 200, 0)}):Play()  end)
     MinBtn.MouseLeave:Connect(function()  TweenService:Create(MinBtn,    TweenInfo.new(0.15), {BackgroundColor3 = Color3.fromRGB(190, 150, 0)}):Play()  end)
 
-    -- Circular mobile toggle button (draggable)
     local MobileToggle = Instance.new("Frame", ScreenGui)
     MobileToggle.Size = UDim2.new(0, 58, 0, 58)
     MobileToggle.Position = UDim2.new(0, 14, 0.5, -29)
@@ -504,7 +496,6 @@ function MinhZ:CreateWindow(titleText, iconImage)
 
     CloseBtn.MouseButton1Click:Connect(function() ScreenGui:Destroy() end)
 
-    -- Main window drag
     local dragging, dragInput, dragStart, startPos
 
     local function updateMainDrag(input)
@@ -538,7 +529,6 @@ function MinhZ:CreateWindow(titleText, iconImage)
         if input == dragInput and dragging then updateMainDrag(input) end
     end)
 
-    -- MobileToggle drag + click
     local toggleDragging  = false
     local toggleDragStart = nil
     local toggleStartPos  = nil
@@ -622,7 +612,6 @@ function MinhZ:CreateWindow(titleText, iconImage)
     TagTheme(Sidebar, "Sidebar") TagTheme(SidebarStroke, "PrimaryStroke")
     TagTheme(MobileToggle, "Primary") TagTheme(ToggleGlow, "Primary") TagTheme(ToggleStroke, "PrimaryStroke")
 
-    -- ── Floating pill button (shown when UI is minimized) ──────────────────
     local MinPill = Instance.new("Frame", ScreenGui)
     MinPill.Size = UDim2.new(0, 46, 0, 46)
     MinPill.Position = UDim2.new(0.5, -23, 0, 60)
@@ -711,7 +700,6 @@ function MinhZ:CreateWindow(titleText, iconImage)
     end)
 
     MinBtn.MouseButton1Click:Connect(function()
-        -- Shrink then hide UI + shadows
         TweenService:Create(Shadow,  TweenInfo.new(0.18), {BackgroundTransparency = 1}):Play()
         TweenService:Create(Shadow2, TweenInfo.new(0.18), {BackgroundTransparency = 1}):Play()
         local shrink = TweenService:Create(Main, TweenInfo.new(0.2, Enum.EasingStyle.Quart), {Size = UDim2.new(0, 590, 0, 0)})
@@ -720,7 +708,6 @@ function MinhZ:CreateWindow(titleText, iconImage)
             Main.Visible = false
             Main.Size = UDim2.new(0, 590, 0, 385)
         end)
-        -- Pop pill in
         MinPill.Position = UDim2.new(0.5, -23, 0, 60)
         MinPill.BackgroundTransparency = 1
         MinPillStroke.Transparency = 1
@@ -728,7 +715,6 @@ function MinhZ:CreateWindow(titleText, iconImage)
         TweenService:Create(MinPill,       TweenInfo.new(0.3, Enum.EasingStyle.Back), {BackgroundTransparency = 0}):Play()
         TweenService:Create(MinPillStroke, TweenInfo.new(0.3), {Transparency = 0.4}):Play()
     end)
-    -- ── End pill ───────────────────────────────────────────────────────────
 
     function WindowFuncs:SetTheme(themeName)
         if not Themes[themeName] then return end
@@ -751,8 +737,6 @@ function MinhZ:CreateWindow(titleText, iconImage)
         ScreenGui:Destroy()
     end
 
-    -- name     : tab label
-    -- tabIcon  : optional emoji/symbol prefix shown before the tab name
     function WindowFuncs:CreateTab(name, tabIcon)
         local TabContent = Instance.new("ScrollingFrame", TabContainer)
         TabContent.Size = UDim2.new(1, 0, 1, 0)
@@ -786,7 +770,6 @@ function MinhZ:CreateWindow(titleText, iconImage)
         Instance.new("UICorner", TabBtn).CornerRadius = UDim.new(0, 7)
         TagTheme(TabBtn, "Background")
 
-        -- Left active indicator bar
         local ActiveBar = Instance.new("Frame", TabBtn)
         ActiveBar.Size = UDim2.new(0, 3, 0, 16)
         ActiveBar.Position = UDim2.new(0, 0, 0.5, -8)
@@ -1380,7 +1363,6 @@ function MinhZ:CreateWindow(titleText, iconImage)
             PreviewStroke.Thickness = 1
             PreviewStroke.Transparency = 0.65
 
-            -- Palette container (hidden until open)
             local PaletteWrap = Instance.new("Frame", ColorFrame)
             PaletteWrap.Size = UDim2.new(1, -16, 0, 0)
             PaletteWrap.Position = UDim2.new(0, 8, 0, 46)
@@ -1444,10 +1426,6 @@ function MinhZ:CreateWindow(titleText, iconImage)
                 end)
             end
 
-            -- Calculate palette height: 27 colors / 9 per row = 3 rows, each row = 31px, + 12px padding
-            -- We know the grid is (1,-12) wide. At 26px cell + 5px gap = 31px per cell.
-            -- Wrap width ≈ TabContent width - 32px padding. Tab is ~390px. Wrap = ~374px. Grid = ~362px.
-            -- Cols = floor((362 + 5) / 31) = 11. Rows = ceil(27/11) = 3. Height = 3*26 + 2*5 + 12 = 102
             local PALETTE_HEIGHT = 110
 
             local function togglePicker()
